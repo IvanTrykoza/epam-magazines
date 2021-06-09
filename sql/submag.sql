@@ -1,100 +1,135 @@
 -- -----------------------------------------------------
 -- Schema submag
 -- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `submag` DEFAULT CHARACTER SET utf8 ;
+USE `submag` ;
 
-CREATE DATABASE IF NOT EXISTS submag;
-USE submag;
 
-
-DROP TABLE if exists category;
+DROP TABLE if exists receipt_has_magazine;
 DROP TABLE if exists magazine;
+DROP TABLE if exists category;
 DROP TABLE if exists receipt;
-DROP TABLE if exists receipt_has_product;
+DROP TABLE if exists user;
 DROP TABLE if exists role;
 DROP TABLE if exists status;
-DROP TABLE if exists user;
 
-CREATE TABLE role (
-    role_id INT AUTO_INCREMENT,
-    role_name VARCHAR(45) NOT NULL UNIQUE, -- NOT NULL
-    PRIMARY KEY (role_id)
-);
 
-CREATE TABLE user (
-    user_id INT AUTO_INCREMENT,
-    login VARCHAR(45) NOT NULL,     -- NOT NULL
-    password VARCHAR(45) NOT NULL,  -- NOT NULL
-    user_name VARCHAR(256) NOT NULL,     -- NOT NULL
-    status TINYINT DEFAULT 1,
-    role_id INT NOT NULL            -- NOT NULL
-		REFERENCES role (role_id)
-		ON UPDATE CASCADE
-		ON DELETE RESTRICT,
-    wallet DECIMAL(15 , 2 ) UNSIGNED NULL DEFAULT 0,
-    create_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY pk_user_id (user_id),
-    UNIQUE KEY uq_user_login (login)
-);
+-- -----------------------------------------------------
+-- Table `submag`.`category`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `submag`.`category` (
+  `category_id` INT NOT NULL AUTO_INCREMENT,
+  `category_name` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`category_id`),
+  UNIQUE INDEX `uq_category_name` (`category_name` ASC) VISIBLE);
 
-CREATE TABLE category (
-    category_id INT AUTO_INCREMENT,
-    category_name VARCHAR(45) NOT NULL, 		-- NOT NULL
-    PRIMARY KEY pk_category_id (category_id),
-    UNIQUE KEY uq_category_name (category_name)
-);
 
-CREATE TABLE magazine (
-    magazine_id INT AUTO_INCREMENT,
-    magazine_name VARCHAR(256) NOT NULL,                  -- NOT NULL
-    description VARCHAR(1024) NULL,
-    category_id INT
-		REFERENCES category (category_id)
-		ON UPDATE CASCADE
-		ON DELETE SET NULL,
-    price DECIMAL(15 , 2 ) UNSIGNED NOT NULL,   -- NOT NULL
-    PRIMARY KEY pk_magazine_id (magazine_id),
-    UNIQUE KEY uq_magazine_name (magazine_name),
-    CONSTRAINT ch_magazine_price CHECK (price >= 0)
-);
+-- -----------------------------------------------------
+-- Table `submag`.`magazine`
+-- --
+CREATE TABLE IF NOT EXISTS `submag`.`magazine` (
+  `magazine_id` INT NOT NULL AUTO_INCREMENT,
+  `magazine_name` VARCHAR(256) NOT NULL,
+  `description` VARCHAR(256) NULL DEFAULT NULL,
+  `category_id` INT NULL,
+  `price` DECIMAL(15,2) UNSIGNED NOT NULL,
+  PRIMARY KEY (`magazine_id`),
+  INDEX `fk_magazine_category1_idx` (`category_id` ASC) VISIBLE,
+  CONSTRAINT `fk_magazine_category1`
+    FOREIGN KEY (`category_id`)
+    REFERENCES `submag`.`category` (`category_id`)
+    ON DELETE SET NULL
+    ON UPDATE CASCADE);
 
-CREATE TABLE status (
-    status_id INT AUTO_INCREMENT,
-    status_name VARCHAR(45) NOT NULL,          -- NOT NULL
-    PRIMARY KEY pk_status_id (status_id),
-    UNIQUE KEY uq_status_name (status_name)
-);
 
-CREATE TABLE receipt (
-    receipt_id INT AUTO_INCREMENT,
-    total_price DECIMAL(15 , 2 ) NOT NULL, -- NOT NULL
-    user_id INT
-		REFERENCES user (user_id)
-		ON DELETE SET NULL
-		ON UPDATE CASCADE,
-    status_id INT NOT NULL                  -- NOT NULL
-		REFERENCES status (status_id)
-		ON DELETE RESTRICT
-		ON UPDATE CASCADE,
-	create_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY pk_receipt_id (receipt_id),
-    CONSTRAINT ch_total_price CHECK (total_price >= 0)
-);
+-- -----------------------------------------------------
+-- Table `submag`.`role`
+-- ----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `submag`.`role` (
+  `role_id` INT NOT NULL AUTO_INCREMENT,
+  `role_name` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`role_id`),
+  UNIQUE INDEX `name` (`role_name` ASC) VISIBLE);
 
-CREATE TABLE receipt_has_product (
-    receipt_id INT
-		REFERENCES receipt (receipt_id)
-		ON DELETE CASCADE
-		ON UPDATE CASCADE,
-    magazine_id INT
-		REFERENCES magazine (magazine_id)
-		ON UPDATE CASCADE
-		ON DELETE RESTRICT,
-    price DECIMAL(15 , 2 ) UNSIGNED NOT NULL,   -- NOT NULL
-    PRIMARY KEY (receipt_id , magazine_id),
-    CONSTRAINT ck_receipt_has_magazine_price CHECK (price >= 0)
-);
+
+-- -----------------------------------------------------
+-- Table `submag`.`user`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `submag`.`user` (
+  `user_id` INT NOT NULL AUTO_INCREMENT,
+  `login` VARCHAR(45) NOT NULL,
+  `password` VARCHAR(45) NOT NULL,
+  `user_name` VARCHAR(256) NOT NULL,
+  `status` TINYINT(10) NULL DEFAULT 1,
+  `role_id` INT NOT NULL,
+  `wallet` DECIMAL(15,2) UNSIGNED NULL DEFAULT NULL,
+  `create_date` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  `last_update` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`user_id`),
+  UNIQUE INDEX `uq_user_login` (`login` ASC) VISIBLE,
+  INDEX `fk_user_role1_idx` (`role_id` ASC) VISIBLE,
+  CONSTRAINT `fk_user_role1`
+    FOREIGN KEY (`role_id`)
+    REFERENCES `submag`.`role` (`role_id`)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE);
+
+
+-- -----------------------------------------------------
+-- Table `submag`.`status`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `submag`.`status` (
+  `status_id` INT NOT NULL AUTO_INCREMENT,
+  `status_name` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`status_id`),
+  UNIQUE INDEX `uq_status_name` (`status_name` ASC) VISIBLE);
+
+
+-- -----------------------------------------------------
+-- Table `submag`.`receipt`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `submag`.`receipt` (
+  `receipt_id` INT NOT NULL AUTO_INCREMENT,
+  `total_price` DECIMAL(15,2) NOT NULL,
+  `user_id` INT NULL,
+  `status_id` INT NOT NULL,
+  `create_date` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  `last_update` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`receipt_id`),
+  INDEX `fk_receipt_user1_idx` (`user_id` ASC) VISIBLE,
+  INDEX `fk_receipt_status1_idx` (`status_id` ASC) VISIBLE,
+  CONSTRAINT `fk_receipt_user1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `submag`.`user` (`user_id`)
+    ON DELETE SET NULL
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_receipt_status1`
+    FOREIGN KEY (`status_id`)
+    REFERENCES `submag`.`status` (`status_id`)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE);
+
+
+-- -----------------------------------------------------
+-- Table `submag`.`receipt_has_magazine`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `submag`.`receipt_has_magazine` (
+  `receipt_id` INT NOT NULL,
+  `magazine_id` INT NOT NULL,
+  `price` DECIMAL(15,2) UNSIGNED NOT NULL,
+  PRIMARY KEY (`receipt_id`, `magazine_id`),
+  INDEX `fk_receipt_has_magazine_magazine1_idx` (`magazine_id` ASC) VISIBLE,
+  INDEX `fk_receipt_has_magazine_receipt1_idx` (`receipt_id` ASC) VISIBLE,
+  CONSTRAINT `fk_receipt_has_magazine_receipt1`
+    FOREIGN KEY (`receipt_id`)
+    REFERENCES `submag`.`receipt` (`receipt_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_receipt_has_magazine_magazine1`
+    FOREIGN KEY (`magazine_id`)
+    REFERENCES `submag`.`magazine` (`magazine_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
 
 -- -----------------------------------------------------
 -- Inserts
@@ -175,8 +210,6 @@ INSERT INTO magazine (magazine_id, magazine_name, description, category_id, pric
 INSERT INTO magazine (magazine_id, magazine_name, description, category_id, price) VALUES(DEFAULT, "Young technician #05 May 2019", "Scientific and technical, popular science magazine for teenagers", 2, 1.5);
 INSERT INTO magazine (magazine_id, magazine_name, description, category_id, price) VALUES(DEFAULT, "Aerospace Review #6, June 2020", "coverage of all aspects of activities in the development, production and operation of aviation and space technology", 2, 7.2);
 INSERT INTO magazine (magazine_id, magazine_name, description, category_id, price) VALUES(DEFAULT, "The world #4, April 2020", "scientific and technical journal of metrological profile", 2, 4);
-
-
 
 -- status
 INSERT INTO status (status_id, status_name) VALUES(DEFAULT, "new");
