@@ -1,0 +1,129 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto&display=swap");
+
+body {
+    font-family: "Roboto", sans-serif;
+}
+
+
+.pagination{
+    margin: 2rem;
+}
+
+/* ---------------- header-section ---------------------------- */
+.header-action-item {
+    display: flex;
+}
+
+.header-brand-name {
+    margin: 0;
+    font-size: 2.5rem;
+    font-family: "Playfair Display", serif;
+}
+
+.btn-drop-leng::before {
+    content: "\f0ac";
+    font-family: FontAwesome;
+}
+
+/* ---------------- nav-menu section ---------------------------- */
+
+.category-block-link {
+    text-align: center;
+    text-decoration: none;
+    color: #000000;
+    font-size: 1.5rem;
+}
+
+.category-block {
+    margin-bottom: 0.5rem;
+}
+
+/* ---------------- sort-section ---------------------------- */
+.btn-drop-name::before {
+    content: "\f15d";
+    font-family: FontAwesome;
+}
+
+.btn-drop-price::before {
+    content: "\f155";
+    font-family: FontAwesome;
+}
+
+.btn-custom-drop {
+    border: none;
+    color: #000000;
+}
+
+.btn-drop {
+    display: flex;
+}
+
+/* ---------------- product-card section ---------------------------- */
+.card .name {
+    text-align: center;
+    padding: 0.3rem;
+    border-bottom: 1px solid #ddd;
+}
+
+.card .description {
+    text-align: center;
+    margin: 0;
+    padding: 0.1rem;
+    border-bottom: 1px solid #ddd;
+}
+
+.btn-addTo-cart{
+    margin: 15px;
+    width: 8.5rem;
+}
+
+/* ---------------- main page section ---------------------------- */
+.btn-menu-castom {
+    border: none;
+    background-color: #ffff;
+    color: rgb(13, 110, 253);
+    border-bottom: 1px solid rgb(13, 110, 253);
+    border-radius: 0;
+}
+
+.custom-menu {
+    border: 1px solid rgb(13, 110, 253);
+    padding: 15px;
+}
+
+.btn-basket::before {
+    content: "\f291";
+    font-family: FontAwesome;
+}
+
+.btn-logIn::before {
+    content: "\f2bd";
+    font-family: FontAwesome;
+}
+
+.btn-magazine:before {
+    content: "\f02e";
+    font-family: FontAwesome;
+}
+
+.btn-ac-info:before {
+    content: "\f05a";
+    font-family: FontAwesome;
+}
+
+.btn-admin-set:before {
+    content: "\f085";
+    font-family: FontAwesome;
+}
+
+.btn-logOut::before {
+    content: "\f08b";
+    font-family: FontAwesome;
+}
+
+/* ---------------- cart section ---------------------------- */
+
+#buySignIn.btn::before {
+    content: "\f2bd";
+    font-family: FontAwesome;
+}
