@@ -36,12 +36,14 @@ public class EditUserCommand implements Command {
             address = "controller?command=showAllUsers&currentPage=" + currentPage;
             userManager.setUserStatus(VALUE_STATUS_FALSE, user.getId());
 //            user.setStatus(userManager.getActualUserStatus(user.getId()));
+//            req.getSession().setAttribute("loggedUser", user);
         }
 
         if (status.equals("unblock")) {
             address = "controller?command=showAllUsers&currentPage=" + currentPage;
             userManager.setUserStatus(VALUE_STATUS_TRUE, user.getId());
 //            user.setStatus(userManager.getActualUserStatus(user.getId()));
+//            req.getSession().setAttribute("loggedUser", user);
         }
         return address;
     }

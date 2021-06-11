@@ -22,7 +22,7 @@
         <nav class="navbar navbar-light">
             <div class="container-fluid">
                 <!-- -----------------------------------logo----------------------------------------------- -->
-                <a class="navbar-brand header-brand-name " href="mainPage.jsp">Subscribtions</a>
+                <a class="navbar-brand header-brand-name " href="mainPage.jsp">Subscriptions</a>
                 <c:if test="${sessionScope.loggedUser != null}">
                     <a type="button" class="btn" href="account-info.jsp">User: ${sessionScope.loggedUser.name}</a>
                 </c:if>
@@ -35,7 +35,7 @@
     <nav class="nav justify-content-center category-block">
         <a class="nav-link category-block-link" href="controller?command=accountInfo">Personal information and
             wallet</a>
-        <a class="nav-link category-block-link" href="subscription.jsp">Subscriptions</a>
+        <a class="nav-link category-block-link" href="controller?command=getUsersSubscriptions">Subscriptions</a>
     </nav>
     <!-- -----------------------------------subscribtion info----------------------------------------------- -->
 
@@ -43,21 +43,19 @@
         <table class="table table-hover align-middle text-truncate">
             <thead>
             <tr>
-                <th scope="col">#</th>
                 <th scope="col">Name</th>
-                <th scope="col">Description</th>
-                <th scope="col">Genre</th>
+                <th scope="col">Date_Start</th>
+                <th scope="col">Date_End</th>
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <th scope="row">1</th>
-                <td>RollingStone</td>
-                <td class="text-truncate" style="max-width: 450px;">Lorem ipsum dolor sit amet consectetur adipisicing
-                    elit. Nesciunt, dolor!
-                </td>
-                <td>Genre</td>
-            </tr>
+            <c:forEach items="${subscriptions}" var="subscription">
+                <tr>
+                    <td>${subscription.magazineName}</td>
+                    <td>${subscription.startDate}</td>
+                    <td>${subscription.endDate}</td>
+                </tr>
+            </c:forEach>
             </tbody>
         </table>
     </div>

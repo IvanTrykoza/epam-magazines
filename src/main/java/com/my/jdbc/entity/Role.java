@@ -7,12 +7,6 @@ public class Role implements Serializable {
     private long id;
     private String name;
 
-    static public Role createRole(String name) {
-        Role role = new Role();
-        role.setName(name);
-        return role;
-    }
-
     public long getId() {
         return id;
     }

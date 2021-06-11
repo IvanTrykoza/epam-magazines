@@ -31,6 +31,9 @@ public class CommandContainer {
         commands.put("sortMagazineByPriceHL", new SortMagazineByPriceHLCommand());
         commands.put("sortMagazineByPriceLH", new SortMagazineByPriceLHCommand());
 
+        commands.put("subscribeMagazine", new SubscribeMagazine());
+        commands.put("getUsersSubscriptions", new ShowSubscriptionsCommand());
+
     }
 
     public static Command getCommand(String commandName) {

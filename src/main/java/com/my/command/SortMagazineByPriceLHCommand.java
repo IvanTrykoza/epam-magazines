@@ -26,7 +26,8 @@ public class SortMagazineByPriceLHCommand implements Command {
 
         String prevRequest;
         if (req.getParameter("prevRequest") != null && !req.getParameter("prevRequest").equals("sortMagazineByName")
-                && !req.getParameter("prevRequest").equals("sortMagazineByPriceLH") && !req.getParameter("prevRequest").equals("sortMagazineByPriceHL")) {
+                && !req.getParameter("prevRequest").equals("sortMagazineByPriceLH") && !req.getParameter("prevRequest").equals("sortMagazineByPriceHL")
+                && !req.getParameter("prevRequest").equals("addMagazineToCart")) {
             prevRequest = req.getParameter("prevRequest");
             req.getSession().setAttribute("prevRequest", prevRequest);
         }

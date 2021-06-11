@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!doctype html>
@@ -19,6 +19,9 @@
 
 <body>
 
+<c:if test="${param.command != 'subscribeMagazine'}">
+    <c:set var="command" scope="session" value="${param.command}"/>
+</c:if>
 
 <header>
     <div class="container">
@@ -26,9 +29,17 @@
             <div class="container-fluid">
                 <!-- -----------------------------------logo----------------------------------------------- -->
                 <a class="navbar-brand header-brand-name " href="mainPage.jsp">Subscriptions</a>
-                <c:if test="${sessionScope.loggedUser != null}">
-                    <a type="button" class="btn" href="account-info.jsp">User: ${sessionScope.loggedUser.name}</a>
-                </c:if>
+                <ul class="nav justify-content-end">
+                    <li class="nav-item">
+                        <c:if test="${sessionScope.loggedUser != null}">
+                            <a type="button" class="btn"
+                               href="account-info.jsp">User: ${sessionScope.loggedUser.name}</a>
+                        </c:if>
+                    </li>
+                    <li class="nav-item">
+
+                    </li>
+                </ul>
             </div>
         </nav>
     </div>
@@ -45,12 +56,25 @@
                href="controller?command=sortMagazineByCategory&categoryName=${category.name}&currentPage=1">${category.name}</a>
         </c:forEach>
     </nav>
+
+    <%--    <c:if test="${sessionScope.loggedUser != null && sessionScope.loggedUser.status == false}">--%>
+    <%--        <div class="alert alert-warning" role="alert">--%>
+    <%--            Your account is not active! you cannot subscribe.--%>
+    <%--        </div>--%>
+    <%--    </c:if>--%>
+
+    <c:if test="${sessionScope.loggedUser == null}">
+        <div class="alert alert-warning" role="alert">
+            To make subscribe, please sign in!
+        </div>
+    </c:if>
+
     <!-- -----------------------------------sorted-option----------------------------------------------- -->
     <nav class="navbar navbar-light">
         <div class="container-fluid">
             <div class="btn-drop">
                 <a type="button" class="btn btn-drop-name"
-                   href="controller?command=sortMagazineByName&prevRequest=<%= request.getParameter("command") %>&currentPage=<%= request.getParameter("currentPage") %>">By
+                   href="controller?command=sortMagazineByName&prevRequest=<c:out value="${command}"/>&currentPage=${currentPage}">By
                     name</a>
                 <div class="dropdown">
                     <button class="btn btn-custom-drop btn-drop-price" type="button"
@@ -59,17 +83,17 @@
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <li><a class="dropdown-item"
-                               href="controller?command=sortMagazineByPriceLH&prevRequest=<%= request.getParameter("command") %>&currentPage=<%= request.getParameter("currentPage") %>">Price:
+                               href="controller?command=sortMagazineByPriceLH&prevRequest=<c:out value="${command}"/>&currentPage=${currentPage}">Price:
                             Low to High</a>
                         </li>
                         <li><a class="dropdown-item"
-                               href="controller?command=sortMagazineByPriceHL&prevRequest=<%= request.getParameter("command") %>&currentPage=<%= request.getParameter("currentPage") %>">Price:
+                               href="controller?command=sortMagazineByPriceHL&prevRequest=<c:out value="${command}"/>&currentPage=${currentPage}">Price:
                             High to Low</a></li>
                     </ul>
                 </div>
             </div>
 
-            <form class="d-flex col-12 col-sm-5 col-md-5" method="get">
+            <form class="d-flex col-12 col-sm-5 col-md-5" method="post">
                 <input type="hidden" name="command" value="findMagazineByName">
                 <input type="hidden" name="currentPage" value="1">
                 <input class="form-control mr-2" type="search" name="magazineName" placeholder="Search query"
@@ -79,76 +103,69 @@
         </div>
     </nav>
 
-    <!-- -----------------------------------product-list----------------------------------------------- -->
+
     <div id="productList">
         <div class="row">
-
-            <c:choose>
-                <c:when test="${magazines.size() == 0}">
-                    <div class="alert alert-warning" role="alert">
-                        No result!!
-                    </div>
-                </c:when>
-                <c:otherwise>
-                    <c:forEach items="${magazines}" var="magazine">
-                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 card-castom">
-                            <!-- -----------------------------------product-data----------------------------------------------- -->
-                            <div id="product278009" class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title name" style="height: 60px">${magazine.name}</h5>
-                                    <p class="card-text description" style="height: 50px;"
-                                       title="${magazine.description}">${magazine.description}</p>
-                                    <ul class="list-group list-group-flush">
-                                        <li class="list-group-item">Category:<span
-                                                class="pull-right">${magazine.categoryName}</span>
-                                        </li>
-                                        <li class="list-group-item">Price:<span
-                                                class="pull-right">${magazine.price}</span></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="text-center">
-                                <a id="addToCart" class="btn btn-primary btn-custom-orange btn-addTo-cart" role="button"
-                                   data-id-product="278009">Add</a>
-                            </div>
+            <c:forEach items="${magazines}" var="magazine">
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3 card-castom" style="margin-bottom: 20px">
+                    <!-- -----------------------------------product-data----------------------------------------------- -->
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title name" style="height: 60px">${magazine.name}</h5>
+                            <p class="card-text description" style="height: 50px;"
+                               title="${magazine.description}">${magazine.description}</p>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">Category:<span
+                                        class="pull-right">${magazine.categoryName}</span>
+                                </li>
+                                <li class="list-group-item">Price:<span
+                                        class="pull-right">${magazine.price} / month</span></li>
+                            </ul>
                         </div>
-                    </c:forEach>
-                    <!-- -----------------------------------pagination----------------------------------------------- -->
-                    <nav aria-label="NavigationMagazine">
-                        <ul class="pagination justify-content-center">
-                            <c:if test="${currentPage != 1}">
-                                <li class="page-item"><a class="page-link"
-                                                         href="controller?command=<%= request.getParameter("command") %>&currentPage=${currentPage-1}"
-                                                         aria-label="Previous"><span
-                                        aria-hidden="true">&laquo;</span></a>
-                                </li>
-                            </c:if>
-
-                            <c:forEach begin="1" end="${noOfPages}" var="i">
-                                <c:choose>
-                                    <c:when test="${currentPage eq i}">
-                                        <li class="page-item active"><a class="page-link">${i}</a></li>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <li class="page-item"><a class="page-link"
-                                                                 href="controller?command=<%= request.getParameter("command") %>&currentPage=${i}">${i}</a>
-                                        </li>
-                                    </c:otherwise>
-                                </c:choose>
-                            </c:forEach>
-
-                            <c:if test="${currentPage lt noOfPages}">
-                                <li class="page-item"><a class="page-link"
-                                                         href="controller?command=<%= request.getParameter("command") %>&currentPage=${currentPage+1}"
-                                                         aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
-                                </li>
-                            </c:if>
-                        </ul>
-                    </nav>
-                    <!-- -----------------------------------pagination----------------------------------------------- -->
-                </c:otherwise>
-            </c:choose>
+                    </div>
+                    <div class="text-center">
+                        <form action="controller" method="post">
+                            <input type="hidden" name="command" value="subscribeMagazine">
+                            <input type="hidden" name="magazineId" value=${magazine.id}>
+                            <input type="submit" class="btn btn-outline-primary btn-addTo-cart"
+                                   value="Subscribe">
+                        </form>
+                    </div>
+                </div>
+            </c:forEach>
         </div>
+        <!-- -----------------------------------pagination----------------------------------------------- -->
+        <nav aria-label="NavigationMagazine">
+            <ul class="pagination justify-content-center">
+                <c:if test="${currentPage != 1}">
+                    <li class="page-item"><a class="page-link"
+                                             href="controller?command=<c:out value="${command}"/>&currentPage=${currentPage-1}"
+                                             aria-label="Previous"><span
+                            aria-hidden="true">&laquo;</span></a>
+                    </li>
+                </c:if>
+
+                <c:forEach begin="1" end="${noOfPages}" var="i">
+                    <c:choose>
+                        <c:when test="${currentPage eq i}">
+                            <li class="page-item active"><a class="page-link">${i}</a></li>
+                        </c:when>
+                        <c:otherwise>
+                            <li class="page-item"><a class="page-link"
+                                                     href="controller?command=<c:out value="${command}"/>&currentPage=${i}">${i}</a>
+                            </li>
+                        </c:otherwise>
+                    </c:choose>
+                </c:forEach>
+
+                <c:if test="${currentPage lt noOfPages}">
+                    <li class="page-item"><a class="page-link"
+                                             href="controller?command=<c:out value="${command}"/>&currentPage=${currentPage+1}"
+                                             aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
+                    </li>
+                </c:if>
+            </ul>
+        </nav>
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"

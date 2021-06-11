@@ -12,15 +12,6 @@ public class Magazine implements Serializable {
     private long categoryId;
     private String categoryName;
 
-
-
-    static public Magazine createProduct(String name, double price) {
-        Magazine product = new Magazine();
-        product.setName(name);
-        product.setPrice(price);
-        return product;
-    }
-
     public String getCategoryName() {
         return categoryName;
     }

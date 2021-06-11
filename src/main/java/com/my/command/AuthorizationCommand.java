@@ -10,7 +10,6 @@ import org.apache.logging.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static com.my.jdbc.SQLConstant.*;
 
 public class AuthorizationCommand implements Command {
 
@@ -32,17 +31,12 @@ public class AuthorizationCommand implements Command {
 
         logger.info("user ==> " + user);
 
-        if (user != null && password.equals(user.getPassword()) && user.getRoleId() == ADMIN_ROLE_ID) {
+        if (user != null && password.equals(user.getPassword())) {
             address = "mainPage.jsp";
             req.getSession().setAttribute("loggedUser", user);
             return address;
         }
 
-        if (user != null && password.equals(user.getPassword()) && user.getRoleId() == CUSTOMER_ROLE_ID) {
-            address = "mainPage.jsp";
-            req.getSession().setAttribute("loggedUser", user);
-            return address;
-        }
 
         throw new DBException("Incorrect login or Password! Please, enter correct data");
     }

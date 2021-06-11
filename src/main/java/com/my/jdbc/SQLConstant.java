@@ -22,15 +22,6 @@ public interface SQLConstant {
     String CATEGORY_ID = "category_id";
     String CATEGORY_NAME = "category_name";
 
-    //Receipt
-    String RECEIPT_TOTAL_PRICE = "total_price";
-    String RECEIPT_USER_ID = "user_id";
-    String RECEIPT_STATUS_ID = "status_id";
-
-    //Receipt-HAS-Product
-    String R_HAS_P_RECEIPT_ID = "receipt_id";
-    String R_HAS_P_PRODUCT_ID = "product_id";
-
     //Role-Constants
     int CUSTOMER_ROLE_ID = 2;
     int ADMIN_ROLE_ID = 1;
@@ -38,6 +29,13 @@ public interface SQLConstant {
     //Status-Constants
     int VALUE_STATUS_TRUE = 1;
     int VALUE_STATUS_FALSE = 0;
+
+    //Subscription
+    String SUBSCRIPTION_ID = "sub_id";
+    String SUBSCRIPTION_USER_ID = "user_id";
+    String SUBSCRIPTION_MAGAZINE_ID = "magazine_id";
+    String SUBSCRIPTION_START_DATE = "start_date";
+    String SUBSCRIPTION_END_DATE = "end_date";
 
 
     //Query to user table
@@ -51,6 +49,13 @@ public interface SQLConstant {
     String SET_USER_STATUS = "UPDATE user SET status=? WHERE user_id=?";
     String GET_AMOUNT_OF_ALL_USERS = "SELECT COUNT(user_id) FROM user WHERE role_id=2";
 
+
+    String DO_SUBSCRIPTION = "INSERT INTO subscription (user_id, magazine_id, start_date, end_date) VALUES(?, ?, ?, ?)";
+
+    String GET_SUBSCRIPTION_BY_USER_ID = "SELECT * FROM subscription s JOIN magazine m ON s.magazine_id=m.magazine_id WHERE user_id=?";
+    String GET_SUBSCRIPTION = "SELECT * FROM subscription s JOIN magazine m ON s.magazine_id=m.magazine_id";
+
+    String REMOVE_SUBSCRIPTION_MAGAZINE = "DELETE FROM subscription WHERE magazine_id=?";
 
     //Query to magazine table
     String GET_AMOUNT_OF_MAGAZINES_FOUND_BY_CATEGORY = "SELECT COUNT(magazine_id) FROM magazine m JOIN category c ON m.category_id=c.category_id WHERE c.category_name=?";
@@ -66,6 +71,7 @@ public interface SQLConstant {
     String SET_MAGAZINE_INFO = "UPDATE magazine SET magazine_name=?, description=?, category_id=?, price=? WHERE magazine_id=?";
     String SET_CATEGORY = "INSERT INTO category (category_name) VALUES (?)";
     String ADD_NEW_MAGAZINE = "INSERT INTO magazine (magazine_name, description, category_id, price) VALUES (?, ?, ?, ?)";
+    String GET_MAGAZINE_BY_ID = "SELECT * FROM magazine m JOIN category c ON m.category_id=c.category_id WHERE magazine_id=?";
 
     String SORT_MAGAZINES_BY_NAME_ALL_REQUEST = "SELECT * FROM magazine m JOIN category c ON m.category_id=c.category_id ORDER BY magazine_name ASC LIMIT ?, ?";
     String SORT_MAGAZINES_BY_NAME_SEARCH_REQUEST = "SELECT * FROM magazine m JOIN category c ON m.category_id=c.category_id WHERE magazine_name LIKE ? ORDER BY magazine_name ASC LIMIT ?, ?";
@@ -78,5 +84,8 @@ public interface SQLConstant {
     String SORT_MAGAZINES_BY_PRICE_ALL_REQUEST_HL = "SELECT * FROM magazine m JOIN category c ON m.category_id=c.category_id ORDER BY price DESC LIMIT ?, ?";
     String SORT_MAGAZINES_BY_PRICE_SEARCH_REQUEST_HL = "SELECT * FROM magazine m JOIN category c ON m.category_id=c.category_id WHERE magazine_name LIKE ? ORDER BY price DESC LIMIT ?, ?";
     String SORT_MAGAZINES_BY_PRICE_CATEGORY_REQUEST_HL = "SELECT * FROM magazine m JOIN category c ON m.category_id=c.category_id WHERE c.category_name=? ORDER BY price DESC LIMIT ?, ?";
+
+
+    String CHECK_SUBSCRIPTION = "SELECT * FROM subscription WHERE user_id=? AND magazine_id=?";
 
 }

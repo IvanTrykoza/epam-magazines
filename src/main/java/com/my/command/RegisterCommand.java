@@ -18,7 +18,10 @@ public class RegisterCommand implements Command {
     @Override
     public String execute(HttpServletRequest req, HttpServletResponse res) throws DBException, DBException {
         logger.info("RegisterCommand#execute");
+
         String address = "mainPage.jsp";
+
+        UserManager userManager = UserManager.getInstance();
 
         String name = req.getParameter("name");
         logger.info("name ==> " + name);
@@ -29,7 +32,10 @@ public class RegisterCommand implements Command {
         String password = req.getParameter("password");
         logger.info("password ==> " + password);
 
-        UserManager userManager = UserManager.getInstance();
+        if (userManager.getUserByLogin(login) != null) {
+            throw new DBException("This user already exist!");
+        }
+
         userManager.createUser(login, password, name, CUSTOMER_ROLE_ID);
 
         return address;

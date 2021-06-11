@@ -23,7 +23,7 @@
         <nav class="navbar navbar-light">
             <div class="container-fluid">
                 <!-- -----------------------------------logo----------------------------------------------- -->
-                <a class="navbar-brand header-brand-name " href="mainPage.jsp">Subscribtions</a>
+                <a class="navbar-brand header-brand-name " href="mainPage.jsp">Subscriptions</a>
                 <c:if test="${sessionScope.loggedUser != null}">
                     <h5>User: ${sessionScope.loggedUser.name}</h5>
                 </c:if>

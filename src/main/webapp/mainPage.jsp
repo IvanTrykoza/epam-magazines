@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -18,21 +18,54 @@
 
 <body>
 <header>
-    <div class="container">
+    <div class="container" style="margin-bottom: 20px">
         <nav class="navbar navbar-light">
             <div class="container-fluid">
                 <!-- -----------------------------------logo----------------------------------------------- -->
-                <a class="navbar-brand header-brand-name " href="mainPage.jsp">Subscribtions</a>
+                <a class="navbar-brand header-brand-name " href="mainPage.jsp">Subscriptions</a>
+
+
                 <ul class="nav justify-content-end">
+
                     <li class="nav-item">
-                        <c:if test="${sessionScope.loggedUser != null}">
-                            <a type="button" class="btn"
-                               href="account-info.jsp">User: ${sessionScope.loggedUser.name}</a>
+                        <c:choose>
+                            <c:when test="${sessionScope.loggedUser != null && sessionScope.loggedUser.roleId == 1}">
+                                <a class="btn btn-admin-set" type="button"
+                                   href="controller?command=showAllUsers&currentPage=1"> Admin Setting</a>
+                            </c:when>
+                            <c:otherwise>
+                                <a class="btn btn-magazine" type="button"
+                                   href="controller?command=showAllMagazine&currentPage=1"> Magazines</a>
+                            </c:otherwise>
+                        </c:choose>
+                    </li>
+
+                    <li class="nav-item">
+                        <c:if test="${sessionScope.loggedUser != null && sessionScope.loggedUser.roleId != 1}">
+                            <a class="btn btn-ac-info" type="button"
+                               href="controller?command=accountInfo">
+                                Account Information</a>
                         </c:if>
                     </li>
+
                     <li class="nav-item">
-                        <a class="btn btn-custom-drop btn-drop-leng" type="button" id="dropdownMenuButton"
-                           data-toggle="dropdown" aria-expanded="false"> EN</a>
+                        <c:choose>
+                            <c:when test="${sessionScope.loggedUser != null}">
+                                <a class="btn btn-logOut" type="button"
+                                   href="controller?command=logOut">
+                                    Log Out</a>
+                            </c:when>
+                            <c:otherwise>
+                                <a class="btn btn-logIn" type="button" data-toggle="modal"
+                                   data-target="#signInBtnModal" href="#"> Log In / Register</a>
+                            </c:otherwise>
+                        </c:choose>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-outline-dark" href="#" style="margin: 3px"> EN </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-outline-dark" href="#" style="margin: 3px"> RU </a>
                     </li>
                 </ul>
             </div>
@@ -40,38 +73,41 @@
     </div>
 </header>
 
-<div class="container">
-    <div class="d-grid gap-2 col-4 mx-auto custom-menu">
-        <c:choose>
-            <c:when test="${sessionScope.loggedUser != null && sessionScope.loggedUser.roleId == 1}">
-                <a class="btn btn-primary btn-menu-castom btn-admin-set" type="button"
-                   href="controller?command=showAllUsers&currentPage=1"> Admin Setting</a>
-            </c:when>
-            <c:otherwise>
-                <a class="btn btn-primary btn-menu-castom btn-magazine" type="button"
-                   href="controller?command=showAllMagazine&currentPage=1"> Magazines</a>
-                <a class="btn btn-primary btn-menu-castom btn-basket" href="cart.jsp" role="button"> Cart</a>
-            </c:otherwise>
-        </c:choose>
+<main class="container">
+    <div class="row">
+        <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+            <h5>Періодичні видання</h5>
+            <p>
+                Реалізувати роботу системи Періодичні видання. В системі існує перелік Видань, які згруповані за
+                тематикою.
+                Читач може оформити Передплату на одне або декілька видань. Для переліку видань необхідно реалізувати
+                можливість:
+            <ul>
+                <li>сортування видань за назвою;</li>
+                <li>сортування видань за ціною;</li>
+                <li>вибірки видань за певною темою;</li>
+                <li>пошуку видання за назвою.</li>
+            </ul>
+            Читач реєструється в системі і має особистий кабінет, в якому відображена інформація про видання, на які
+            він підписаний. Незареэстрований користувач не може оформити підписку.
+            Читач має персональний Рахунок, який він може поповнити. Кошти з рахунку знімаються під час підписки на
+            видання.
+            Адміністратор системи володіє правами:
+            <ul>
+                <li>додавання, видалення і редагування видання;</li>
+                <li>блокування, розблокування користувача.</li>
+            </ul>
+            </p>
+        </div>
 
-        <c:if test="${sessionScope.loggedUser != null && sessionScope.loggedUser.roleId != 1}">
-            <a class="btn btn-primary btn-menu-castom btn-ac-info" type="button" href="controller?command=accountInfo">
-                Account
-                Information</a>
-        </c:if>
+        <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+            <img src="static/img/newspaper.png"  class="img-fluid" >
+        </div>
 
-        <c:choose>
-            <c:when test="${sessionScope.loggedUser != null}">
-                <a class="btn btn-primary btn-menu-castom btn-logOut" type="button" href="controller?command=logOut">
-                    Log Out</a>
-            </c:when>
-            <c:otherwise>
-                <a class="btn btn-primary btn-menu-castom btn-logIn" type="button" data-toggle="modal"
-                   data-target="#signInBtnModal" href="#"> Log In / Register</a>
-            </c:otherwise>
-        </c:choose>
     </div>
-</div>
+
+
+</main>
 
 <!-- -----------------------------------register popup----------------------------------------------- -->
 <div class="modal fade" id="signInBtnModal" aria-hidden="true" aria-labelledby="exampleModalToggleLabel"

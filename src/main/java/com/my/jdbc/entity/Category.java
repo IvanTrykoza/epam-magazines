@@ -8,12 +8,6 @@ public class Category implements Serializable {
     private long id;
     private String name;
 
-    static public Category createCategory(String name) {
-        Category category = new Category();
-        category.setName(name);
-        return category;
-    }
-
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }

@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!doctype html>
 <html lang="en">
@@ -21,7 +21,7 @@
         <nav class="navbar navbar-light">
             <div class="container-fluid">
                 <!-- -----------------------------------logo----------------------------------------------- -->
-                <a class="navbar-brand header-brand-name " href="mainPage.jsp">Subscribtions</a>
+                <a class="navbar-brand header-brand-name " href="mainPage.jsp">Subscriptions</a>
                 <c:if test="${sessionScope.loggedUser != null}">
                     <h5>User: ${sessionScope.loggedUser.name}</h5>
                 </c:if>

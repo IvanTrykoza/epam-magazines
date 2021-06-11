@@ -1,8 +1,10 @@
 package com.my.jdbc;
 
+import com.my.jdbc.entity.Subscription;
 import com.my.jdbc.entity.User;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -98,6 +100,7 @@ public class UserManager {
         }
     }
 
+
     public void topUbBalance(double amountOfMoney, long userId) throws DBException {
         Connection con = null;
         try {
@@ -130,6 +133,57 @@ public class UserManager {
         }
         return balance;
     }
+
+
+    public List<Subscription> getSubscriptionsByUserId(long userId) throws DBException {
+        List<Subscription> subscriptions;
+        Connection con = null;
+        try {
+            con = dbManager.getConnection();
+            subscriptions = dbManager.getSubscriptionsByUserId(con, userId);
+            con.commit();
+        } catch (SQLException ex) {
+            logger.error("Cannot get subscriptions from data-base", ex);
+            dbManager.rollback(con);
+            throw new DBException("Cannot get subscriptions from data-base", ex);
+        } finally {
+            dbManager.close(con);
+        }
+        return subscriptions;
+    }
+
+    public List<Subscription> getSubscriptions() throws DBException {
+        List<Subscription> subscriptions;
+        Connection con = null;
+        try {
+            con = dbManager.getConnection();
+            subscriptions = dbManager.getSubscriptions(con);
+            con.commit();
+        } catch (SQLException ex) {
+            logger.error("Cannot get subscriptions", ex);
+            dbManager.rollback(con);
+            throw new DBException("Cannot get subscriptions", ex);
+        } finally {
+            dbManager.close(con);
+        }
+        return subscriptions;
+    }
+
+    public void removeSubscription(long magazineId) throws DBException {
+        Connection con = null;
+        try {
+            con = dbManager.getConnection();
+            dbManager.removeSubscription(con, magazineId);
+            con.commit();
+        } catch (SQLException ex) {
+            logger.error("Cannot remove subscription with magazineId ==> " + magazineId, ex);
+            dbManager.rollback(con);
+            throw new DBException("Cannot remove subscription with magazineId ==> " + magazineId, ex);
+        } finally {
+            dbManager.close(con);
+        }
+    }
+
 
     public void setUserStatus(int status, long userId) throws DBException {
         Connection con = null;
@@ -182,4 +236,55 @@ public class UserManager {
         return numOfRows;
 
     }
+
+    public void updateBalance(double amountOfMoney, long userId) throws DBException {
+        Connection con = null;
+        try {
+            con = dbManager.getConnection();
+            dbManager.updateBalance(con, amountOfMoney, userId);
+            con.commit();
+        } catch (SQLException ex) {
+            logger.error("Cannot update balance with params (amountOfMoney, userId) ==> " +
+                    "(" + amountOfMoney + "," + userId + ")", ex);
+            dbManager.rollback(con);
+            throw new DBException("Cannot update balance", ex);
+        } finally {
+            dbManager.close(con);
+        }
+    }
+
+    public void doSubscribe(long userId, long magazineId, Date startDate, Date endDate) throws DBException {
+        Connection con = null;
+        try {
+            con = dbManager.getConnection();
+            dbManager.doSubscribe(con, userId, magazineId, startDate, endDate);
+            con.commit();
+        } catch (SQLException ex) {
+            logger.error("Cannot create subscription with params (userId, magazineId, startDate, endDate) ==> " +
+                    "(" + userId + "," + magazineId + "," + startDate + "," + endDate + ")", ex);
+            dbManager.rollback(con);
+            throw new DBException("Cannot create subscription", ex);
+        } finally {
+            dbManager.close(con);
+        }
+    }
+
+    public boolean checkSubscription(long userId, long magazineId) throws DBException {
+        Connection con = null;
+        boolean result;
+        try {
+            con = dbManager.getConnection();
+            result = dbManager.checkSubscription(con, userId, magazineId);
+            con.commit();
+        } catch (SQLException ex) {
+            logger.error("Cannot check subscription", ex);
+            dbManager.rollback(con);
+            throw new DBException("Cannot check subscription", ex);
+        } finally {
+            dbManager.close(con);
+        }
+        return result;
+    }
+
+
 }

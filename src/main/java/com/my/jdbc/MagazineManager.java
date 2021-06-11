@@ -2,6 +2,7 @@ package com.my.jdbc;
 
 import com.my.jdbc.entity.Category;
 import com.my.jdbc.entity.Magazine;
+import com.my.jdbc.entity.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -371,5 +372,22 @@ public class MagazineManager {
         } finally {
             dbManager.close(con);
         }
+    }
+
+    public Magazine getMagazineById(long magazineId) throws DBException {
+        Magazine magazine;
+        Connection con = null;
+        try {
+            con = dbManager.getConnection();
+            magazine = dbManager.getMagazineById(con, magazineId);
+            con.commit();
+        } catch (SQLException ex) {
+            logger.error("Cannot get magazine by ID ==> " + magazineId, ex);
+            dbManager.rollback(con);
+            throw new DBException("Cannot get magazine by ID: " + magazineId, ex);
+        } finally {
+            dbManager.close(con);
+        }
+        return magazine;
     }
 }

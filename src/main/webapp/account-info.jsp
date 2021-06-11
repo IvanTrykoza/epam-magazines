@@ -22,7 +22,7 @@
         <nav class="navbar navbar-light">
             <div class="container-fluid">
                 <!-- -----------------------------------logo----------------------------------------------- -->
-                <a class="navbar-brand header-brand-name " href="mainPage.jsp">Subscribtions</a>
+                <a class="navbar-brand header-brand-name " href="mainPage.jsp">Subscriptions</a>
             </div>
         </nav>
     </div>
@@ -30,9 +30,8 @@
 <div class="container">
     <!-- -----------------------------------header-category----------------------------------------------- -->
     <nav class="nav justify-content-center category-block">
-        <a class="nav-link category-block-link" href="controller?command=accountInfo">Personal information and
-            wallet</a>
-        <a class="nav-link category-block-link" href="account-subscription.jsp">Subscriptions</a>
+        <a class="nav-link category-block-link" href="controller?command=accountInfo">Personal information and wallet</a>
+        <a class="nav-link category-block-link" href="controller?command=getUsersSubscriptions">Subscriptions</a>
     </nav>
     <!-- -----------------------------------account-info-option----------------------------------------------- -->
     <div id="accountInfo" class="container col-12 col-md-8 account-info-area"
@@ -43,7 +42,16 @@
             <li class="list-group-item">Login:<span class="pull-right">${sessionScope.loggedUser.login}</span></li>
             <li class="list-group-item">Current balance:<span
                     class="pull-right">${sessionScope.loggedUser.wallet}</span></li>
-
+            <li class="list-group-item">Status:<span class="pull-right">
+            <c:choose>
+                <c:when test="${sessionScope.loggedUser.status == true}">
+                    Active
+                </c:when>
+                <c:otherwise>
+                    Blocked
+                </c:otherwise>
+            </c:choose>
+            </span></li>
             <li class="list-group-item">
                 <form action="controller" class="row">
                     <input type="hidden" name="command" value="topUpBalance">

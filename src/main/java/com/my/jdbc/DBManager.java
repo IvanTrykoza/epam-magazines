@@ -2,6 +2,7 @@ package com.my.jdbc;
 
 import com.my.jdbc.entity.Category;
 import com.my.jdbc.entity.Magazine;
+import com.my.jdbc.entity.Subscription;
 import com.my.jdbc.entity.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,6 +11,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
+import javax.xml.transform.Result;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -134,6 +136,7 @@ public class DBManager {
         }
     }
 
+
     public void topUpBalance(Connection con, double amountOfMoney, long userId) throws SQLException {
         PreparedStatement psmt = null;
         ResultSet rs = null;
@@ -171,6 +174,25 @@ public class DBManager {
         }
         return amountOfMoney;
     }
+
+    public void updateBalance(Connection con, double amountOfMoney, long userId) {
+        PreparedStatement psmt = null;
+        ResultSet rs = null;
+        try {
+            psmt = con.prepareStatement(SET_USER_BALANCE);
+            int k = 1;
+            psmt.setString(k++, String.valueOf(getActualBalance(con, userId) - amountOfMoney));
+            psmt.setString(k++, String.valueOf(userId));
+            psmt.executeUpdate();
+        } catch (SQLException ex) {
+            logger.error("Cannot update balance with params (amountOfMoney, userId) ==> " +
+                    "(" + amountOfMoney + "," + userId + ")", ex);
+        } finally {
+            close(rs);
+            close(psmt);
+        }
+    }
+
 
     public void setUserStatus(Connection con, int status, long userId) throws SQLException {
         PreparedStatement psmt = null;
@@ -236,6 +258,113 @@ public class DBManager {
         user.setStatus(rs.getBoolean(USER_STATUS));
         user.setWallet(rs.getDouble(USER_WALLET));
         return user;
+    }
+
+
+    public void doSubscribe(Connection con, long userId, long magazineId, Date startDate, Date endDate) throws SQLException {
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = con.prepareStatement(DO_SUBSCRIPTION);
+            int k = 1;
+            pstmt.setLong(k++, userId);
+            pstmt.setLong(k++, magazineId);
+            pstmt.setDate(k++, startDate);
+            pstmt.setDate(k++, endDate);
+            logger.info("ps = " + pstmt);
+            pstmt.executeUpdate();
+
+        } catch (SQLException ex) {
+            logger.error("Cannot create subscription with params (userId, magazineId, startDate, endDate) ==> " +
+                    "(" + userId + "," + magazineId + "," + startDate + "," + endDate + ")", ex);
+        } finally {
+            close(pstmt);
+        }
+    }
+
+    public List<Subscription> getSubscriptionsByUserId(Connection con, long userId) throws SQLException {
+        List<Subscription> subscriptions = new ArrayList<>();
+        PreparedStatement psmt = null;
+        ResultSet rs = null;
+        try {
+            psmt = con.prepareStatement(GET_SUBSCRIPTION_BY_USER_ID);
+            psmt.setLong(1, userId);
+            rs = psmt.executeQuery();
+            while (rs.next()) {
+                subscriptions.add(extractSubscription(rs));
+            }
+        } catch (SQLException ex) {
+            logger.error("Cannot get subscriptions from data-base", ex);
+        } finally {
+            close(rs);
+            close(psmt);
+        }
+        return subscriptions;
+    }
+
+    public List<Subscription> getSubscriptions(Connection con) throws SQLException {
+        List<Subscription> subscriptions = new ArrayList<>();
+        Statement stmt = null;
+        ResultSet rs = null;
+        try {
+            stmt = con.createStatement();
+            rs = stmt.executeQuery(GET_SUBSCRIPTION);
+            while (rs.next()) {
+                subscriptions.add(extractSubscription(rs));
+            }
+        } catch (SQLException ex) {
+            logger.info("Cannot get subscriptions", ex);
+        } finally {
+            close(rs);
+            close(stmt);
+        }
+        return subscriptions;
+    }
+
+    public void removeSubscription(Connection con, long magazineId) {
+        PreparedStatement psmt = null;
+        try {
+            psmt = con.prepareStatement(REMOVE_SUBSCRIPTION_MAGAZINE);
+            psmt.setLong(1, magazineId);
+            psmt.executeUpdate();
+        } catch (SQLException ex) {
+            logger.error("Cannot remove subscription with magazineId ==> " + magazineId, ex);
+        } finally {
+            close(psmt);
+        }
+    }
+
+
+    public boolean checkSubscription(Connection con, long userId, long magazineId) throws SQLException {
+        PreparedStatement psmt = null;
+        ResultSet rs = null;
+        boolean result = false;
+        try {
+            psmt = con.prepareStatement(CHECK_SUBSCRIPTION);
+            int k = 1;
+            psmt.setLong(k++, userId);
+            psmt.setLong(k++, magazineId);
+            rs = psmt.executeQuery();
+            if (rs.next()) {
+                result = true;
+            }
+        } catch (SQLException ex) {
+            logger.error("Cannot check subscription", ex);
+        } finally {
+            close(rs);
+            close(psmt);
+        }
+        return result;
+    }
+
+    private Subscription extractSubscription(ResultSet rs) throws SQLException {
+        Subscription subscription = new Subscription();
+        subscription.setSubId(rs.getLong(SUBSCRIPTION_ID));
+        subscription.setMagazineId(rs.getLong(SUBSCRIPTION_MAGAZINE_ID));
+        subscription.setMagazineName(rs.getString(MAGAZINE_NAME));
+        subscription.setUserId(rs.getLong(SUBSCRIPTION_USER_ID));
+        subscription.setStartDate(rs.getDate(SUBSCRIPTION_START_DATE));
+        subscription.setEndDate(rs.getDate(SUBSCRIPTION_END_DATE));
+        return subscription;
     }
 
 //    --------------------------MAGAZINE METHOD ------------------------------------
@@ -456,6 +585,26 @@ public class DBManager {
         } finally {
             close(psmt);
         }
+    }
+
+    public Magazine getMagazineById(Connection con, long magazineId) throws SQLException {
+        Magazine magazine = null;
+        PreparedStatement psmt = null;
+        ResultSet rs = null;
+        try {
+            psmt = con.prepareStatement(GET_MAGAZINE_BY_ID);
+            psmt.setString(1, String.valueOf(magazineId));
+            rs = psmt.executeQuery();
+            if (rs.next()) {
+                magazine = extractMagazine(rs);
+            }
+        } catch (SQLException ex) {
+            logger.error("Cannot get magazine by ID ==> " + magazineId, ex);
+        } finally {
+            close(rs);
+            close(psmt);
+        }
+        return magazine;
     }
 
 
@@ -724,6 +873,7 @@ public class DBManager {
             }
         }
     }
+
 
 
 }

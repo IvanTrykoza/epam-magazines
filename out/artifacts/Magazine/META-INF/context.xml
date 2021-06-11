@@ -12,5 +12,5 @@
               username="root"
               password="myrluka123"
               driverClassName="com.mysql.cj.jdbc.Driver"
-              url="jdbc:mysql://localhost:3306/submag"/>
+              url="jdbc:mysql://localhost:3306/submag-epam"/>
 </Context>

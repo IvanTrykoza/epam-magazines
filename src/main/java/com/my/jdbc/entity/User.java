@@ -15,15 +15,6 @@ public class User implements Serializable {
     private Date createDate;
     private Date lastUpdate;
 
-    public static User createUser(String login, String password, String name, long roleId) {
-        User user = new User();
-        user.setLogin(login);
-        user.setPassword(password);
-        user.setRoleId(roleId);
-        user.setName(name);
-        return user;
-    }
-
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }
