@@ -45,8 +45,8 @@ public interface SQLConstant {
     String ADD_NEW_USER = "INSERT INTO user (login, password, user_name, role_id) VALUES (?, ?, ?, ?)";
     String SET_USER_BALANCE = "UPDATE user SET wallet=? WHERE user_id=?";
     String GET_USER_BALANCE = "SELECT wallet FROM user WHERE user_id=?";
-    String GET_USER_STATUS = "SELECT status FROM user WHERE user_id=?";
     String SET_USER_STATUS = "UPDATE user SET status=? WHERE user_id=?";
+    String GET_USER_STATUS = "SELECT status FROM user WHERE user_id=?";
     String GET_AMOUNT_OF_ALL_USERS = "SELECT COUNT(user_id) FROM user WHERE role_id=2";
 
 
@@ -84,7 +84,6 @@ public interface SQLConstant {
     String SORT_MAGAZINES_BY_PRICE_ALL_REQUEST_HL = "SELECT * FROM magazine m JOIN category c ON m.category_id=c.category_id ORDER BY price DESC LIMIT ?, ?";
     String SORT_MAGAZINES_BY_PRICE_SEARCH_REQUEST_HL = "SELECT * FROM magazine m JOIN category c ON m.category_id=c.category_id WHERE magazine_name LIKE ? ORDER BY price DESC LIMIT ?, ?";
     String SORT_MAGAZINES_BY_PRICE_CATEGORY_REQUEST_HL = "SELECT * FROM magazine m JOIN category c ON m.category_id=c.category_id WHERE c.category_name=? ORDER BY price DESC LIMIT ?, ?";
-
 
     String CHECK_SUBSCRIPTION = "SELECT * FROM subscription WHERE user_id=? AND magazine_id=?";
 

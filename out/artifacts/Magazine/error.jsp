@@ -1,5 +1,10 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<c:set var="locale" value="${not empty sessionScope.locale ? sessionScope.locale : 'en'}"/>
+<fmt:setLocale value="${locale}"/>
+<fmt:setBundle basename="resources"/>
 <!DOCTYPE html>
 <html>
 <head>
@@ -17,10 +22,10 @@
 
 <body class="container">
 <div class="text-center" style="">
-    <h1 style="color: darkred; margin-top: 50px">!!! ERROR !!!</h1>
+    <h1 style="color: darkred; margin-top: 50px">!!! WARNING !!!</h1>
     <hr>
     <h5 style="margin: 30px">${error.getMessage()}</h5>
-    <a type="button" class="btn btn-primary" href="${header.referer}">Back to preview page</a>
+    <a type="button" class="btn btn-primary" href="${header.referer}"><fmt:message key="error.button"/></a>
 </div>
 </body>
 </html>

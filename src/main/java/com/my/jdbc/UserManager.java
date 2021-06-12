@@ -33,21 +33,38 @@ public class UserManager {
 
     ///////////////////////////////////////////////////////////////////////////////
 
-    public List<User> getAllUsers(int currentPage, int recordsPerPage) throws DBException {
-        List<User> users;
+    public List<Subscription> getSubscriptionsByUserId(long userId) throws DBException {
+        List<Subscription> subscriptions;
         Connection con = null;
         try {
             con = dbManager.getConnection();
-            users = dbManager.getAllUsers(con, currentPage, recordsPerPage);
+            subscriptions = dbManager.getSubscriptionsByUserId(con, userId);
             con.commit();
         } catch (SQLException ex) {
-            logger.error("Cannot get users from data-base", ex);
+            logger.error("Cannot get subscriptions from data-base", ex);
             dbManager.rollback(con);
-            throw new DBException("Cannot get users from data-base", ex);
+            throw new DBException("Cannot get subscriptions from data-base", ex);
         } finally {
             dbManager.close(con);
         }
-        return users;
+        return subscriptions;
+    }
+
+    public List<Subscription> getSubscriptions() throws DBException {
+        List<Subscription> subscriptions;
+        Connection con = null;
+        try {
+            con = dbManager.getConnection();
+            subscriptions = dbManager.getSubscriptions(con);
+            con.commit();
+        } catch (SQLException ex) {
+            logger.error("Cannot get subscriptions", ex);
+            dbManager.rollback(con);
+            throw new DBException("Cannot get subscriptions", ex);
+        } finally {
+            dbManager.close(con);
+        }
+        return subscriptions;
     }
 
     public User getUserById(int userId) throws DBException {
@@ -100,7 +117,6 @@ public class UserManager {
         }
     }
 
-
     public void topUbBalance(double amountOfMoney, long userId) throws DBException {
         Connection con = null;
         try {
@@ -134,41 +150,6 @@ public class UserManager {
         return balance;
     }
 
-
-    public List<Subscription> getSubscriptionsByUserId(long userId) throws DBException {
-        List<Subscription> subscriptions;
-        Connection con = null;
-        try {
-            con = dbManager.getConnection();
-            subscriptions = dbManager.getSubscriptionsByUserId(con, userId);
-            con.commit();
-        } catch (SQLException ex) {
-            logger.error("Cannot get subscriptions from data-base", ex);
-            dbManager.rollback(con);
-            throw new DBException("Cannot get subscriptions from data-base", ex);
-        } finally {
-            dbManager.close(con);
-        }
-        return subscriptions;
-    }
-
-    public List<Subscription> getSubscriptions() throws DBException {
-        List<Subscription> subscriptions;
-        Connection con = null;
-        try {
-            con = dbManager.getConnection();
-            subscriptions = dbManager.getSubscriptions(con);
-            con.commit();
-        } catch (SQLException ex) {
-            logger.error("Cannot get subscriptions", ex);
-            dbManager.rollback(con);
-            throw new DBException("Cannot get subscriptions", ex);
-        } finally {
-            dbManager.close(con);
-        }
-        return subscriptions;
-    }
-
     public void removeSubscription(long magazineId) throws DBException {
         Connection con = null;
         try {
@@ -182,59 +163,6 @@ public class UserManager {
         } finally {
             dbManager.close(con);
         }
-    }
-
-
-    public void setUserStatus(int status, long userId) throws DBException {
-        Connection con = null;
-        try {
-            con = dbManager.getConnection();
-            dbManager.setUserStatus(con, status, userId);
-            con.commit();
-        } catch (SQLException ex) {
-            logger.error("Cannot set status for userID ==> " + userId, ex);
-            dbManager.rollback(con);
-            throw new DBException("Cannot set status for userID: " + userId, ex);
-        } finally {
-            dbManager.close(con);
-        }
-    }
-
-    public boolean getActualUserStatus(long userId) throws DBException {
-        boolean status;
-        Connection con = null;
-        try {
-            con = dbManager.getConnection();
-            status = dbManager.getActualUserStatus(con, userId);
-            con.commit();
-        } catch (SQLException ex) {
-            logger.error("Cannot get actual status for userID ==> " + userId, ex);
-            dbManager.rollback(con);
-            throw new DBException("Cannot get actual status for userID: " + userId, ex);
-        } finally {
-            dbManager.close(con);
-        }
-
-        return status;
-    }
-
-    public Integer getAmountOfAllUsers() throws DBException {
-        int numOfRows;
-        Connection con = null;
-        try {
-            con = dbManager.getConnection();
-            numOfRows = dbManager.getAmountOfAllUsers(con);
-            con.commit();
-
-        } catch (SQLException ex) {
-            logger.error("Cannot get amount of all users", ex);
-            dbManager.rollback(con);
-            throw new DBException("Cannot get amount of all users", ex);
-        } finally {
-            dbManager.close(con);
-        }
-        return numOfRows;
-
     }
 
     public void updateBalance(double amountOfMoney, long userId) throws DBException {
@@ -286,5 +214,22 @@ public class UserManager {
         return result;
     }
 
+    public boolean getUserStatus(long userId) throws DBException {
+        boolean status;
+        Connection con = null;
+        try {
+            con = dbManager.getConnection();
+            status = dbManager.getUserStatus(con, userId);
+            con.commit();
+        } catch (SQLException ex) {
+            logger.error("Cannot get status for userID ==> " + userId, ex);
+            dbManager.rollback(con);
+            throw new DBException("Cannot get status for userID: " + userId, ex);
+        } finally {
+            dbManager.close(con);
+        }
+
+        return status;
+    }
 
 }

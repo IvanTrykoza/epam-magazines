@@ -1,8 +1,13 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<c:set var="locale" value="${not empty sessionScope.locale ? sessionScope.locale : 'en'}"/>
+<fmt:setLocale value="${locale}"/>
+<fmt:setBundle basename="resources"/>
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -22,20 +27,20 @@
         <nav class="navbar navbar-light">
             <div class="container-fluid">
                 <!-- -----------------------------------logo----------------------------------------------- -->
-                <a class="navbar-brand header-brand-name " href="mainPage.jsp">Subscriptions</a>
-
-
+                <a class="navbar-brand header-brand-name " href="mainPage.jsp"><fmt:message key="app.logo"/></a>
                 <ul class="nav justify-content-end">
 
                     <li class="nav-item">
                         <c:choose>
                             <c:when test="${sessionScope.loggedUser != null && sessionScope.loggedUser.roleId == 1}">
                                 <a class="btn btn-admin-set" type="button"
-                                   href="controller?command=showAllUsers&currentPage=1"> Admin Setting</a>
+                                   href="controller?command=showAllUsers&currentPage=1"> <fmt:message
+                                        key="mainPage.adminSetting"/></a>
                             </c:when>
                             <c:otherwise>
                                 <a class="btn btn-magazine" type="button"
-                                   href="controller?command=showAllMagazine&currentPage=1"> Magazines</a>
+                                   href="controller?command=showAllMagazine&currentPage=1"> <fmt:message
+                                        key="mainPage.magazines"/></a>
                             </c:otherwise>
                         </c:choose>
                     </li>
@@ -44,7 +49,7 @@
                         <c:if test="${sessionScope.loggedUser != null && sessionScope.loggedUser.roleId != 1}">
                             <a class="btn btn-ac-info" type="button"
                                href="controller?command=accountInfo">
-                                Account Information</a>
+                                <fmt:message key="mainPage.accountInfo"/></a>
                         </c:if>
                     </li>
 
@@ -53,19 +58,21 @@
                             <c:when test="${sessionScope.loggedUser != null}">
                                 <a class="btn btn-logOut" type="button"
                                    href="controller?command=logOut">
-                                    Log Out</a>
+                                    <fmt:message key="mainPage.logOut"/></a>
                             </c:when>
                             <c:otherwise>
                                 <a class="btn btn-logIn" type="button" data-toggle="modal"
-                                   data-target="#signInBtnModal" href="#"> Log In / Register</a>
+                                   data-target="#signInBtnModal" href="#"> <fmt:message key="app.logIn"/></a>
                             </c:otherwise>
                         </c:choose>
                     </li>
                     <li class="nav-item">
-                        <a class="btn btn-outline-dark" href="#" style="margin: 3px"> EN </a>
+                        <a class="btn btn-outline-dark" type="button" href="controller?command=changeLocale&locale=en"
+                           style="margin: 3px"> EN </a>
                     </li>
                     <li class="nav-item">
-                        <a class="btn btn-outline-dark" href="#" style="margin: 3px"> RU </a>
+                        <a class="btn btn-outline-dark" type="button" href="controller?command=changeLocale&locale=ru"
+                           style="margin: 3px"> RU </a>
                     </li>
                 </ul>
             </div>
@@ -75,12 +82,18 @@
 
 <main class="container">
     <div class="row">
-        <div class="col-12 col-sm-6 col-md-6 col-lg-6">
-            <h5>Періодичні видання</h5>
+        <div class="col-12">
+            <img src="./static/img/main_page-01.png" class="img-fluid" alt="IMG Not Found">
+            <div class="text-center" style="margin-bottom: 50px; margin-top: 50px">
+                <hr>
+                <h2 style="margin-top: 20px; margin-bottom: 20px"><fmt:message key="mainPage.info"/></h2>
+                <hr>
+            </div>
             <p>
                 Реалізувати роботу системи Періодичні видання. В системі існує перелік Видань, які згруповані за
                 тематикою.
-                Читач може оформити Передплату на одне або декілька видань. Для переліку видань необхідно реалізувати
+                Читач може оформити Передплату на одне або декілька видань. Для переліку видань необхідно
+                реалізувати
                 можливість:
             <ul>
                 <li>сортування видань за назвою;</li>
@@ -99,14 +112,7 @@
             </ul>
             </p>
         </div>
-
-        <div class="col-12 col-sm-6 col-md-6 col-lg-6">
-            <img src="static/img/newspaper.png"  class="img-fluid" >
-        </div>
-
     </div>
-
-
 </main>
 
 <!-- -----------------------------------register popup----------------------------------------------- -->
@@ -115,7 +121,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalToggleLabel">Log In</h5>
+                <h5 class="modal-title" id="exampleModalToggleLabel"><fmt:message key="mainPage.loginLabel"/></h5>
                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"
                         aria-hidden="true">
                 </button>
@@ -124,17 +130,18 @@
                 <form action="controller" method="post">
                     <input type="hidden" name="command" value="login">
                     <div class="mb-3">
-                        <label for="inputLogin" class="form-label">Login</label>
+                        <label for="inputLogin" class="form-label"><fmt:message key="mainPage.loginField"/></label>
                         <input type="text" name="login" class="form-control" id="inputLogin">
                     </div>
                     <div class="mb-3">
-                        <label for="inputPassword" class="form-label">Password</label>
+                        <label for="inputPassword" class="form-label"><fmt:message
+                                key="mainPage.passwordField"/></label>
                         <input type="password" name="password" class="form-control" id="inputPassword">
                     </div>
                     <div class="mb-3">
-                        <input type="submit" class="btn btn-success" value="Submit">
+                        <input type="submit" class="btn btn-success" value="<fmt:message key="mainPage.submit"/>">
                         <a href="#" class="card-link" data-target="#logInBtnModal" data-toggle="modal"
-                           data-dismiss="modal">or create account</a>
+                           data-dismiss="modal"> <fmt:message key="mainPage.createAccount"/></a>
                     </div>
                 </form>
             </div>
@@ -146,7 +153,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalToggleLabel2">Register</h5>
+                <h5 class="modal-title" id="exampleModalToggleLabel2"><fmt:message key="mainPage.registerLabel"/></h5>
                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"
                         aria-hidden="true">
                 </button>
@@ -155,19 +162,20 @@
                 <form action="controller" method="post">
                     <input type="hidden" name="command" value="register">
                     <div class="mb-3">
-                        <label for="InputName" class="form-label">Name and Surname</label>
+                        <label for="InputName" class="form-label"><fmt:message key="mainPage.nameSurname"/></label>
                         <input type="text" name="name" class="form-control" id="InputName">
                     </div>
                     <div class="mb-3">
-                        <label for="inputLoginReg" class="form-label">Login</label>
+                        <label for="inputLoginReg" class="form-label"><fmt:message key="mainPage.loginField"/></label>
                         <input type="text" name="login" class="form-control" id="inputLoginReg">
                     </div>
                     <div class="mb-3">
-                        <label for="inputPasswordReg" class="form-label">Password</label>
+                        <label for="inputPasswordReg" class="form-label"><fmt:message
+                                key="mainPage.passwordField"/></label>
                         <input type="password" name="password" class="form-control" id="inputPasswordReg">
                     </div>
                     <div class="mb-3">
-                        <input type="submit" class="btn btn-success" value="Submit">
+                        <input type="submit" class="btn btn-success" value="<fmt:message key="mainPage.submit"/>">
                     </div>
                 </form>
             </div>

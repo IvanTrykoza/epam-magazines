@@ -2,7 +2,6 @@ package com.my.jdbc;
 
 import com.my.jdbc.entity.Category;
 import com.my.jdbc.entity.Magazine;
-import com.my.jdbc.entity.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -310,68 +309,6 @@ public class MagazineManager {
             dbManager.close(con);
         }
         return categories;
-    }
-
-    public void setCategory(String categoryName) throws DBException {
-        Connection con = null;
-        try {
-            con = dbManager.getConnection();
-            dbManager.setCategory(con, categoryName);
-            con.commit();
-        } catch (SQLException ex) {
-            logger.error("Cannot add category with name ==> " + categoryName, ex);
-            dbManager.rollback(con);
-            throw new DBException("Cannot add category with name: " + categoryName, ex);
-        } finally {
-            dbManager.close(con);
-        }
-    }
-
-    public void addMagazine(String magazineName, String magazineDescription, int magazineCategory, double magazinePrice) throws DBException {
-        Connection con = null;
-        try {
-            con = dbManager.getConnection();
-            dbManager.addMagazine(con, magazineName, magazineDescription, magazineCategory, magazinePrice);
-            con.commit();
-        } catch (SQLException ex) {
-            logger.error("Cannot add magazine to data-base with params (name, description, category, price) ==> " +
-                    "(" + magazineName + "," + magazineDescription + "," + magazineCategory + "," + magazinePrice + ")", ex);
-            dbManager.rollback(con);
-            throw new DBException("Cannot add magazine to data-base", ex);
-        } finally {
-            dbManager.close(con);
-        }
-    }
-
-    public void setMagazineInfo(String magazineName, String magazineDescription, int magazineCategory, double magazinePrice, long magazineId) throws DBException {
-        Connection con = null;
-        try {
-            con = dbManager.getConnection();
-            dbManager.setMagazineInfo(con, magazineName, magazineDescription, magazineCategory, magazinePrice, magazineId);
-            con.commit();
-        } catch (SQLException ex) {
-            logger.error("Cannot set magazine info with params (name, description, category, price, magazineID) ==> " +
-                    "(" + magazineName + "," + magazineDescription + "," + magazineCategory + "," + magazinePrice + "," + magazineId + ")", ex);
-            dbManager.rollback(con);
-            throw new DBException("Cannot set magazine info for magazineId: " + magazineId, ex);
-        } finally {
-            dbManager.close(con);
-        }
-    }
-
-    public void deleteMagazineById(long magazineId) throws DBException {
-        Connection con = null;
-        try {
-            con = dbManager.getConnection();
-            dbManager.deleteMagazineById(con, magazineId);
-            con.commit();
-        } catch (SQLException ex) {
-            logger.error("Cannot delete magazine with id ==> " + magazineId, ex);
-            dbManager.rollback(con);
-            throw new DBException("Cannot delete magazine with id: " + magazineId, ex);
-        } finally {
-            dbManager.close(con);
-        }
     }
 
     public Magazine getMagazineById(long magazineId) throws DBException {

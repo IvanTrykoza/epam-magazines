@@ -48,7 +48,7 @@ public class ContextListener implements ServletContextListener {
                 for (Subscription subscription : subscriptionList) {
 
                     terminate = subscription.getEndDate();
-                    logger.info("End Date from DB ==> " + terminate);
+                    logger.info("End Date from subscription table ==> " + terminate);
 
                     if (today.after(terminate)) {
                         userManager.removeSubscription(subscription.getMagazineId());

@@ -209,19 +209,20 @@ public class DBManager {
         }
     }
 
-    public boolean getActualUserStatus(Connection con, long userId) throws SQLException {
+    public boolean getUserStatus(Connection con, long userId) throws SQLException {
         boolean status = false;
         PreparedStatement psmt = null;
         ResultSet rs = null;
         try {
             psmt = con.prepareStatement(GET_USER_STATUS);
-            psmt.setString(1, String.valueOf(userId));
+            psmt.setLong(1, userId);
+            logger.info("userId ==> " + userId);
             rs = psmt.executeQuery();
             if (rs.next()) {
-                status = rs.getBoolean(USER_STATUS);
+                status = rs.getBoolean("status");
             }
         } catch (SQLException ex) {
-            logger.error("Cannot get actual status for userID ==> " + userId, ex);
+            logger.error("Cannot get status for userID ==> " + userId, ex);
         } finally {
             close(rs);
             close(psmt);
@@ -246,18 +247,6 @@ public class DBManager {
             close(stmt);
         }
         return amount;
-    }
-
-    private User extractUser(ResultSet rs) throws SQLException {
-        User user = new User();
-        user.setId(rs.getInt(USER_ID));
-        user.setLogin(rs.getString(USER_LOGIN));
-        user.setPassword(rs.getString(USER_PASSWORD));
-        user.setName(rs.getString(USER_NAME));
-        user.setRoleId(rs.getInt(USER_ROLE_ID));
-        user.setStatus(rs.getBoolean(USER_STATUS));
-        user.setWallet(rs.getDouble(USER_WALLET));
-        return user;
     }
 
 
@@ -333,7 +322,6 @@ public class DBManager {
         }
     }
 
-
     public boolean checkSubscription(Connection con, long userId, long magazineId) throws SQLException {
         PreparedStatement psmt = null;
         ResultSet rs = null;
@@ -356,16 +344,6 @@ public class DBManager {
         return result;
     }
 
-    private Subscription extractSubscription(ResultSet rs) throws SQLException {
-        Subscription subscription = new Subscription();
-        subscription.setSubId(rs.getLong(SUBSCRIPTION_ID));
-        subscription.setMagazineId(rs.getLong(SUBSCRIPTION_MAGAZINE_ID));
-        subscription.setMagazineName(rs.getString(MAGAZINE_NAME));
-        subscription.setUserId(rs.getLong(SUBSCRIPTION_USER_ID));
-        subscription.setStartDate(rs.getDate(SUBSCRIPTION_START_DATE));
-        subscription.setEndDate(rs.getDate(SUBSCRIPTION_END_DATE));
-        return subscription;
-    }
 
 //    --------------------------MAGAZINE METHOD ------------------------------------
 
@@ -851,6 +829,29 @@ public class DBManager {
         return category;
     }
 
+    private Subscription extractSubscription(ResultSet rs) throws SQLException {
+        Subscription subscription = new Subscription();
+        subscription.setSubId(rs.getLong(SUBSCRIPTION_ID));
+        subscription.setMagazineId(rs.getLong(SUBSCRIPTION_MAGAZINE_ID));
+        subscription.setMagazineName(rs.getString(MAGAZINE_NAME));
+        subscription.setUserId(rs.getLong(SUBSCRIPTION_USER_ID));
+        subscription.setStartDate(rs.getDate(SUBSCRIPTION_START_DATE));
+        subscription.setEndDate(rs.getDate(SUBSCRIPTION_END_DATE));
+        return subscription;
+    }
+
+    private User extractUser(ResultSet rs) throws SQLException {
+        User user = new User();
+        user.setId(rs.getInt(USER_ID));
+        user.setLogin(rs.getString(USER_LOGIN));
+        user.setPassword(rs.getString(USER_PASSWORD));
+        user.setName(rs.getString(USER_NAME));
+        user.setRoleId(rs.getInt(USER_ROLE_ID));
+        user.setStatus(rs.getBoolean(USER_STATUS));
+        user.setWallet(rs.getDouble(USER_WALLET));
+        return user;
+    }
+
 //    -----------------------------------------------------------------------------
 
     public void close(AutoCloseable ac) {
@@ -873,7 +874,6 @@ public class DBManager {
             }
         }
     }
-
 
 
 }

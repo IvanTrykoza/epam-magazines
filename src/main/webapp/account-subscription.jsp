@@ -1,5 +1,10 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<c:set var="locale" value="${not empty sessionScope.locale ? sessionScope.locale : 'en'}"/>
+<fmt:setLocale value="${locale}"/>
+<fmt:setBundle basename="resources"/>
 <!doctype html>
 <html lang="en">
 
@@ -22,9 +27,9 @@
         <nav class="navbar navbar-light">
             <div class="container-fluid">
                 <!-- -----------------------------------logo----------------------------------------------- -->
-                <a class="navbar-brand header-brand-name " href="mainPage.jsp">Subscriptions</a>
+                <a class="navbar-brand header-brand-name " href="mainPage.jsp"><fmt:message key="app.logo"/></a>
                 <c:if test="${sessionScope.loggedUser != null}">
-                    <a type="button" class="btn" href="account-info.jsp">User: ${sessionScope.loggedUser.name}</a>
+                    <a type="button" class="btn" href="account-info.jsp"><fmt:message key="app.user"/>: ${sessionScope.loggedUser.name}</a>
                 </c:if>
             </div>
         </nav>
@@ -33,31 +38,43 @@
 <div class="container">
     <!-- -----------------------------------header-category----------------------------------------------- -->
     <nav class="nav justify-content-center category-block">
-        <a class="nav-link category-block-link" href="controller?command=accountInfo">Personal information and
-            wallet</a>
-        <a class="nav-link category-block-link" href="controller?command=getUsersSubscriptions">Subscriptions</a>
+        <a class="nav-link category-block-link" href="controller?command=accountInfo"><fmt:message key="user.personalPage"/></a>
+        <a class="nav-link category-block-link" href="controller?command=getUsersSubscriptions"><fmt:message key="user.subscriptions"/></a>
     </nav>
     <!-- -----------------------------------subscribtion info----------------------------------------------- -->
 
     <div id="subscription" class="container">
-        <table class="table table-hover align-middle text-truncate">
-            <thead>
-            <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Date_Start</th>
-                <th scope="col">Date_End</th>
-            </tr>
-            </thead>
-            <tbody>
-            <c:forEach items="${subscriptions}" var="subscription">
-                <tr>
-                    <td>${subscription.magazineName}</td>
-                    <td>${subscription.startDate}</td>
-                    <td>${subscription.endDate}</td>
-                </tr>
-            </c:forEach>
-            </tbody>
-        </table>
+        <c:choose>
+            <c:when test="${subscriptions.isEmpty()}">
+                <div class="alert alert-warning" role="alert">
+                    <fmt:message key="userSub.alert"/>
+                </div>
+                <div class="text-center">
+                    <a type="button" class="btn btn-primary"
+                       href="controller?command=showAllMagazine&currentPage=1"><fmt:message key="userSub.goToMagazinePg"/></a>
+                </div>
+            </c:when>
+            <c:otherwise>
+                <table class="table table-hover align-middle text-truncate">
+                    <thead>
+                    <tr>
+                        <th scope="col"><fmt:message key="userSub.tableName"/></th>
+                        <th scope="col"><fmt:message key="userSub.tableDateStart"/></th>
+                        <th scope="col"><fmt:message key="userSub.tableDateEnd"/></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:forEach items="${subscriptions}" var="subscription">
+                        <tr>
+                            <td>${subscription.magazineName}</td>
+                            <td>${subscription.startDate}</td>
+                            <td>${subscription.endDate}</td>
+                        </tr>
+                    </c:forEach>
+                    </tbody>
+                </table>
+            </c:otherwise>
+        </c:choose>
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"

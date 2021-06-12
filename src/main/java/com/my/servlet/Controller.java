@@ -1,7 +1,7 @@
 package com.my.servlet;
 
-import com.my.command.container.Command;
-import com.my.command.container.CommandContainer;
+import com.my.command.commandContainer.Command;
+import com.my.command.commandContainer.CommandContainer;
 import com.my.jdbc.DBException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(name="controller", urlPatterns = {"/controller"})
+@WebServlet(name = "controller", urlPatterns = {"/controller"})
 //@WebServlet
 public class Controller extends HttpServlet {
     private static final long serialVersionUID = -201467326342620315L;
@@ -33,7 +33,7 @@ public class Controller extends HttpServlet {
         } catch (DBException ex) {
             req.setAttribute("error", ex);
         }
-        logger.info("address ==>" + address);
+        logger.info("address ==> " + address);
         req.getRequestDispatcher(address).forward(req, resp);
     }
 
@@ -50,7 +50,7 @@ public class Controller extends HttpServlet {
             req.getSession().setAttribute("error", ex);
         }
 
-        logger.info("address ==>" + address);
+        logger.info("address ==> " + address);
 
         resp.sendRedirect(address);
     }
