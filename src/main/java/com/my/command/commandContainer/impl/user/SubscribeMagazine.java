@@ -1,7 +1,7 @@
 package com.my.command.commandContainer.impl.user;
 
 import com.my.command.commandContainer.Command;
-import com.my.jdbc.DBException;
+import com.my.jdbc.exception.DBException;
 import com.my.jdbc.MagazineManager;
 import com.my.jdbc.UserManager;
 import com.my.jdbc.entity.Magazine;
@@ -32,7 +32,7 @@ public class SubscribeMagazine implements Command {
 
         User user = (User) req.getSession().getAttribute("loggedUser");
         Magazine magazine = magazineManager.getMagazineById(magazineId);
-        logger.info(magazine);
+        logger.info("magazine info ==> " + magazine);
 
         if (user == null) {
             throw new DBException("To make subscribe, please sign in!");
@@ -54,10 +54,10 @@ public class SubscribeMagazine implements Command {
 
         long millis = System.currentTimeMillis();
         java.sql.Date startDate = new java.sql.Date(millis);
-        logger.info("startDate = " + startDate);
+        logger.info("subscription startDate = " + startDate);
 
         LocalDate endDate = LocalDate.now().plusMonths(1);
-        logger.info("endDate = " + endDate);
+        logger.info("subscription endDate = " + endDate);
 
         userManager.doSubscribe(user.getId(), magazineId, startDate, Date.valueOf(endDate));
 

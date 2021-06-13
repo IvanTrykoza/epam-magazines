@@ -1,6 +1,6 @@
 package com.my.command.commandContainer;
 
-import com.my.command.commandContainer.impl.ChangeLocaleCommand;
+import com.my.command.commandContainer.impl.*;
 import com.my.command.commandContainer.impl.admin.*;
 import com.my.command.commandContainer.impl.magazine.*;
 import com.my.command.commandContainer.impl.user.*;

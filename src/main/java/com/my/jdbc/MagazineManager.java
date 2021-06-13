@@ -2,6 +2,7 @@ package com.my.jdbc;
 
 import com.my.jdbc.entity.Category;
 import com.my.jdbc.entity.Magazine;
+import com.my.jdbc.exception.DBException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -35,7 +36,7 @@ public class MagazineManager {
         List<Magazine> magazines;
         Connection con = null;
         try {
-            con = dbManager.getConnection();
+            con = DBUtils.getConnection();
             magazines = dbManager.getAllMagazines(con, currentPage, recordsPerPage);
             con.commit();
         } catch (SQLException ex) {
@@ -52,7 +53,7 @@ public class MagazineManager {
         List<Magazine> magazines;
         Connection con = null;
         try {
-            con = dbManager.getConnection();
+            con = DBUtils.getConnection();
             magazines = dbManager.findMagazinesByName(con, magazineName, currentPage, recordsPerPage);
             con.commit();
         } catch (SQLException ex) {
@@ -69,7 +70,7 @@ public class MagazineManager {
         List<Magazine> magazines;
         Connection con = null;
         try {
-            con = dbManager.getConnection();
+            con = DBUtils.getConnection();
             magazines = dbManager.findMagazinesByCategory(con, category, currentPage, recordsPerPage);
             con.commit();
         } catch (SQLException ex) {
@@ -87,7 +88,7 @@ public class MagazineManager {
         int numOfRows;
         Connection con = null;
         try {
-            con = dbManager.getConnection();
+            con = DBUtils.getConnection();
             numOfRows = dbManager.getAmountOfAllMagazines(con);
             con.commit();
 
@@ -105,7 +106,7 @@ public class MagazineManager {
         int numOfRows;
         Connection con = null;
         try {
-            con = dbManager.getConnection();
+            con = DBUtils.getConnection();
             numOfRows = dbManager.getAmountOfMagazinesFoundByCategory(con, categoryName);
             con.commit();
 
@@ -123,7 +124,7 @@ public class MagazineManager {
         int numOfRows;
         Connection con = null;
         try {
-            con = dbManager.getConnection();
+            con = DBUtils.getConnection();
             numOfRows = dbManager.getAmountOfAllMagazinesFoundByName(con, magazineName);
             con.commit();
 
@@ -142,7 +143,7 @@ public class MagazineManager {
         List<Magazine> magazines;
         Connection con = null;
         try {
-            con = dbManager.getConnection();
+            con = DBUtils.getConnection();
             magazines = dbManager.sortMagazinesByNameAllRequest(con, currentPage, recordsPerPage);
             con.commit();
         } catch (SQLException ex) {
@@ -159,7 +160,7 @@ public class MagazineManager {
         List<Magazine> magazines;
         Connection con = null;
         try {
-            con = dbManager.getConnection();
+            con = DBUtils.getConnection();
             magazines = dbManager.sortMagazinesByNameSearchRequest(con, magazineName, currentPage, recordsPerPage);
             con.commit();
         } catch (SQLException ex) {
@@ -176,7 +177,7 @@ public class MagazineManager {
         List<Magazine> magazines;
         Connection con = null;
         try {
-            con = dbManager.getConnection();
+            con = DBUtils.getConnection();
             magazines = dbManager.sortMagazinesByNameCategoryRequest(con, categoryName, currentPage, recordsPerPage);
             con.commit();
         } catch (SQLException ex) {
@@ -194,7 +195,7 @@ public class MagazineManager {
         List<Magazine> magazines;
         Connection con = null;
         try {
-            con = dbManager.getConnection();
+            con = DBUtils.getConnection();
             magazines = dbManager.lowHighSortMagazinesByPriceAllRequest(con, currentPage, recordsPerPage);
             con.commit();
         } catch (SQLException ex) {
@@ -211,7 +212,7 @@ public class MagazineManager {
         List<Magazine> magazines;
         Connection con = null;
         try {
-            con = dbManager.getConnection();
+            con = DBUtils.getConnection();
             magazines = dbManager.lowHighSortMagazinesByPriceSearchRequest(con, magazineName, currentPage, recordsPerPage);
             con.commit();
         } catch (SQLException ex) {
@@ -228,7 +229,7 @@ public class MagazineManager {
         List<Magazine> magazines;
         Connection con = null;
         try {
-            con = dbManager.getConnection();
+            con = DBUtils.getConnection();
             magazines = dbManager.lowHighSortMagazinesByPriceCategoryRequest(con, categoryName, currentPage, recordsPerPage);
             con.commit();
         } catch (SQLException ex) {
@@ -246,7 +247,7 @@ public class MagazineManager {
         List<Magazine> magazines;
         Connection con = null;
         try {
-            con = dbManager.getConnection();
+            con = DBUtils.getConnection();
             magazines = dbManager.highLowSortMagazinesByPriceAllRequest(con, currentPage, recordsPerPage);
             con.commit();
         } catch (SQLException ex) {
@@ -263,7 +264,7 @@ public class MagazineManager {
         List<Magazine> magazines;
         Connection con = null;
         try {
-            con = dbManager.getConnection();
+            con = DBUtils.getConnection();
             magazines = dbManager.highLowSortMagazinesByPriceSearchRequest(con, magazineName, currentPage, recordsPerPage);
             con.commit();
         } catch (SQLException ex) {
@@ -280,7 +281,7 @@ public class MagazineManager {
         List<Magazine> magazines;
         Connection con = null;
         try {
-            con = dbManager.getConnection();
+            con = DBUtils.getConnection();
             magazines = dbManager.highLowSortMagazinesByPriceCategoryRequest(con, categoryName, currentPage, recordsPerPage);
             con.commit();
         } catch (SQLException ex) {
@@ -298,7 +299,7 @@ public class MagazineManager {
         List<Category> categories;
         Connection con = null;
         try {
-            con = dbManager.getConnection();
+            con = DBUtils.getConnection();
             categories = dbManager.getCategories(con);
             con.commit();
         } catch (SQLException ex) {
@@ -315,7 +316,7 @@ public class MagazineManager {
         Magazine magazine;
         Connection con = null;
         try {
-            con = dbManager.getConnection();
+            con = DBUtils.getConnection();
             magazine = dbManager.getMagazineById(con, magazineId);
             con.commit();
         } catch (SQLException ex) {

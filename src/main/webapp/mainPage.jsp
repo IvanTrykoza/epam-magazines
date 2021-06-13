@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="custom" tagdir="/WEB-INF/tags" %>
 
 <c:set var="locale" value="${not empty sessionScope.locale ? sessionScope.locale : 'en'}"/>
 <fmt:setLocale value="${locale}"/>
@@ -22,63 +23,8 @@
 </head>
 
 <body>
-<header>
-    <div class="container" style="margin-bottom: 20px">
-        <nav class="navbar navbar-light">
-            <div class="container-fluid">
-                <!-- -----------------------------------logo----------------------------------------------- -->
-                <a class="navbar-brand header-brand-name " href="mainPage.jsp"><fmt:message key="app.logo"/></a>
-                <ul class="nav justify-content-end">
 
-                    <li class="nav-item">
-                        <c:choose>
-                            <c:when test="${sessionScope.loggedUser != null && sessionScope.loggedUser.roleId == 1}">
-                                <a class="btn btn-admin-set" type="button"
-                                   href="controller?command=showAllUsers&currentPage=1"> <fmt:message
-                                        key="mainPage.adminSetting"/></a>
-                            </c:when>
-                            <c:otherwise>
-                                <a class="btn btn-magazine" type="button"
-                                   href="controller?command=showAllMagazine&currentPage=1"> <fmt:message
-                                        key="mainPage.magazines"/></a>
-                            </c:otherwise>
-                        </c:choose>
-                    </li>
-
-                    <li class="nav-item">
-                        <c:if test="${sessionScope.loggedUser != null && sessionScope.loggedUser.roleId != 1}">
-                            <a class="btn btn-ac-info" type="button"
-                               href="controller?command=accountInfo">
-                                <fmt:message key="mainPage.accountInfo"/></a>
-                        </c:if>
-                    </li>
-
-                    <li class="nav-item">
-                        <c:choose>
-                            <c:when test="${sessionScope.loggedUser != null}">
-                                <a class="btn btn-logOut" type="button"
-                                   href="controller?command=logOut">
-                                    <fmt:message key="mainPage.logOut"/></a>
-                            </c:when>
-                            <c:otherwise>
-                                <a class="btn btn-logIn" type="button" data-toggle="modal"
-                                   data-target="#signInBtnModal" href="#"> <fmt:message key="app.logIn"/></a>
-                            </c:otherwise>
-                        </c:choose>
-                    </li>
-                    <li class="nav-item">
-                        <a class="btn btn-outline-dark" type="button" href="controller?command=changeLocale&locale=en"
-                           style="margin: 3px"> EN </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="btn btn-outline-dark" type="button" href="controller?command=changeLocale&locale=ru"
-                           style="margin: 3px"> RU </a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-    </div>
-</header>
+<custom:mainPageHeader/>
 
 <main class="container">
     <div class="row">
@@ -95,22 +41,24 @@
                 Читач може оформити Передплату на одне або декілька видань. Для переліку видань необхідно
                 реалізувати
                 можливість:
+            </p>
             <ul>
                 <li>сортування видань за назвою;</li>
                 <li>сортування видань за ціною;</li>
                 <li>вибірки видань за певною темою;</li>
                 <li>пошуку видання за назвою.</li>
             </ul>
-            Читач реєструється в системі і має особистий кабінет, в якому відображена інформація про видання, на які
-            він підписаний. Незареэстрований користувач не може оформити підписку.
-            Читач має персональний Рахунок, який він може поповнити. Кошти з рахунку знімаються під час підписки на
-            видання.
-            Адміністратор системи володіє правами:
+            <p>
+                Читач реєструється в системі і має особистий кабінет, в якому відображена інформація про видання, на які
+                він підписаний. Незареэстрований користувач не може оформити підписку.
+                Читач має персональний Рахунок, який він може поповнити. Кошти з рахунку знімаються під час підписки на
+                видання.
+                Адміністратор системи володіє правами:
+            </p>
             <ul>
                 <li>додавання, видалення і редагування видання;</li>
                 <li>блокування, розблокування користувача.</li>
             </ul>
-            </p>
         </div>
     </div>
 </main>
@@ -131,12 +79,12 @@
                     <input type="hidden" name="command" value="login">
                     <div class="mb-3">
                         <label for="inputLogin" class="form-label"><fmt:message key="mainPage.loginField"/></label>
-                        <input type="text" name="login" class="form-control" id="inputLogin">
+                        <input type="text" name="login" class="form-control" id="inputLogin" required>
                     </div>
                     <div class="mb-3">
                         <label for="inputPassword" class="form-label"><fmt:message
                                 key="mainPage.passwordField"/></label>
-                        <input type="password" name="password" class="form-control" id="inputPassword">
+                        <input type="password" name="password" class="form-control" id="inputPassword" required>
                     </div>
                     <div class="mb-3">
                         <input type="submit" class="btn btn-success" value="<fmt:message key="mainPage.submit"/>">
@@ -163,16 +111,16 @@
                     <input type="hidden" name="command" value="register">
                     <div class="mb-3">
                         <label for="InputName" class="form-label"><fmt:message key="mainPage.nameSurname"/></label>
-                        <input type="text" name="name" class="form-control" id="InputName">
+                        <input type="text" name="name" class="form-control" id="InputName" required>
                     </div>
                     <div class="mb-3">
                         <label for="inputLoginReg" class="form-label"><fmt:message key="mainPage.loginField"/></label>
-                        <input type="text" name="login" class="form-control" id="inputLoginReg">
+                        <input type="text" name="login" class="form-control" id="inputLoginReg" required>
                     </div>
                     <div class="mb-3">
                         <label for="inputPasswordReg" class="form-label"><fmt:message
                                 key="mainPage.passwordField"/></label>
-                        <input type="password" name="password" class="form-control" id="inputPasswordReg">
+                        <input type="password" name="password" class="form-control" id="inputPasswordReg" required>
                     </div>
                     <div class="mb-3">
                         <input type="submit" class="btn btn-success" value="<fmt:message key="mainPage.submit"/>">

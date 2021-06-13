@@ -1,6 +1,7 @@
 package com.my.jdbc;
 
 import com.my.jdbc.entity.User;
+import com.my.jdbc.exception.DBException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -34,7 +35,7 @@ public class AdminManager {
         List<User> users;
         Connection con = null;
         try {
-            con = dbManager.getConnection();
+            con = DBUtils.getConnection();
             users = dbManager.getAllUsers(con, currentPage, recordsPerPage);
             con.commit();
         } catch (SQLException ex) {
@@ -50,7 +51,7 @@ public class AdminManager {
     public void setUserStatus(int status, long userId) throws DBException {
         Connection con = null;
         try {
-            con = dbManager.getConnection();
+            con = DBUtils.getConnection();
             dbManager.setUserStatus(con, status, userId);
             con.commit();
         } catch (SQLException ex) {
@@ -66,7 +67,7 @@ public class AdminManager {
         int numOfRows;
         Connection con = null;
         try {
-            con = dbManager.getConnection();
+            con = DBUtils.getConnection();
             numOfRows = dbManager.getAmountOfAllUsers(con);
             con.commit();
 
@@ -84,7 +85,7 @@ public class AdminManager {
     public void setCategory(String categoryName) throws DBException {
         Connection con = null;
         try {
-            con = dbManager.getConnection();
+            con = DBUtils.getConnection();
             dbManager.setCategory(con, categoryName);
             con.commit();
         } catch (SQLException ex) {
@@ -99,7 +100,7 @@ public class AdminManager {
     public void addMagazine(String magazineName, String magazineDescription, int magazineCategory, double magazinePrice) throws DBException {
         Connection con = null;
         try {
-            con = dbManager.getConnection();
+            con = DBUtils.getConnection();
             dbManager.addMagazine(con, magazineName, magazineDescription, magazineCategory, magazinePrice);
             con.commit();
         } catch (SQLException ex) {
@@ -115,7 +116,7 @@ public class AdminManager {
     public void setMagazineInfo(String magazineName, String magazineDescription, int magazineCategory, double magazinePrice, long magazineId) throws DBException {
         Connection con = null;
         try {
-            con = dbManager.getConnection();
+            con = DBUtils.getConnection();
             dbManager.setMagazineInfo(con, magazineName, magazineDescription, magazineCategory, magazinePrice, magazineId);
             con.commit();
         } catch (SQLException ex) {
@@ -131,7 +132,7 @@ public class AdminManager {
     public void deleteMagazineById(long magazineId) throws DBException {
         Connection con = null;
         try {
-            con = dbManager.getConnection();
+            con = DBUtils.getConnection();
             dbManager.deleteMagazineById(con, magazineId);
             con.commit();
         } catch (SQLException ex) {

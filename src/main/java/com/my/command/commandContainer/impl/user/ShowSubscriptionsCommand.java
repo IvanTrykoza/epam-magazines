@@ -1,7 +1,7 @@
 package com.my.command.commandContainer.impl.user;
 
 import com.my.command.commandContainer.Command;
-import com.my.jdbc.DBException;
+import com.my.jdbc.exception.DBException;
 import com.my.jdbc.UserManager;
 import com.my.jdbc.entity.Subscription;
 import com.my.jdbc.entity.User;

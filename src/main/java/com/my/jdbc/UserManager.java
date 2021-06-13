@@ -8,6 +8,7 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
 
+import com.my.jdbc.exception.DBException;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
@@ -37,7 +38,7 @@ public class UserManager {
         List<Subscription> subscriptions;
         Connection con = null;
         try {
-            con = dbManager.getConnection();
+            con = DBUtils.getConnection();
             subscriptions = dbManager.getSubscriptionsByUserId(con, userId);
             con.commit();
         } catch (SQLException ex) {
@@ -54,7 +55,7 @@ public class UserManager {
         List<Subscription> subscriptions;
         Connection con = null;
         try {
-            con = dbManager.getConnection();
+            con = DBUtils.getConnection();
             subscriptions = dbManager.getSubscriptions(con);
             con.commit();
         } catch (SQLException ex) {
@@ -71,7 +72,7 @@ public class UserManager {
         User user;
         Connection con = null;
         try {
-            con = dbManager.getConnection();
+            con = DBUtils.getConnection();
             user = dbManager.getUserById(con, userId);
             con.commit();
         } catch (SQLException ex) {
@@ -88,7 +89,7 @@ public class UserManager {
         User user;
         Connection con = null;
         try {
-            con = dbManager.getConnection();
+            con = DBUtils.getConnection();
             user = dbManager.getUserByLogin(con, userLogin);
             con.commit();
         } catch (SQLException ex) {
@@ -104,7 +105,7 @@ public class UserManager {
     public void createUser(String login, String password, String userName, int userRole) throws DBException {
         Connection con = null;
         try {
-            con = dbManager.getConnection();
+            con = DBUtils.getConnection();
             dbManager.createUser(con, login, password, userName, userRole);
             con.commit();
         } catch (SQLException ex) {
@@ -120,7 +121,7 @@ public class UserManager {
     public void topUbBalance(double amountOfMoney, long userId) throws DBException {
         Connection con = null;
         try {
-            con = dbManager.getConnection();
+            con = DBUtils.getConnection();
             dbManager.topUpBalance(con, amountOfMoney, userId);
             con.commit();
         } catch (SQLException ex) {
@@ -137,7 +138,7 @@ public class UserManager {
         double balance;
         Connection con = null;
         try {
-            con = dbManager.getConnection();
+            con = DBUtils.getConnection();
             balance = dbManager.getActualBalance(con, userId);
             con.commit();
         } catch (SQLException ex) {
@@ -153,7 +154,7 @@ public class UserManager {
     public void removeSubscription(long magazineId) throws DBException {
         Connection con = null;
         try {
-            con = dbManager.getConnection();
+            con = DBUtils.getConnection();
             dbManager.removeSubscription(con, magazineId);
             con.commit();
         } catch (SQLException ex) {
@@ -168,7 +169,7 @@ public class UserManager {
     public void updateBalance(double amountOfMoney, long userId) throws DBException {
         Connection con = null;
         try {
-            con = dbManager.getConnection();
+            con = DBUtils.getConnection();
             dbManager.updateBalance(con, amountOfMoney, userId);
             con.commit();
         } catch (SQLException ex) {
@@ -184,7 +185,7 @@ public class UserManager {
     public void doSubscribe(long userId, long magazineId, Date startDate, Date endDate) throws DBException {
         Connection con = null;
         try {
-            con = dbManager.getConnection();
+            con = DBUtils.getConnection();
             dbManager.doSubscribe(con, userId, magazineId, startDate, endDate);
             con.commit();
         } catch (SQLException ex) {
@@ -201,7 +202,7 @@ public class UserManager {
         Connection con = null;
         boolean result;
         try {
-            con = dbManager.getConnection();
+            con = DBUtils.getConnection();
             result = dbManager.checkSubscription(con, userId, magazineId);
             con.commit();
         } catch (SQLException ex) {
@@ -218,7 +219,7 @@ public class UserManager {
         boolean status;
         Connection con = null;
         try {
-            con = dbManager.getConnection();
+            con = DBUtils.getConnection();
             status = dbManager.getUserStatus(con, userId);
             con.commit();
         } catch (SQLException ex) {

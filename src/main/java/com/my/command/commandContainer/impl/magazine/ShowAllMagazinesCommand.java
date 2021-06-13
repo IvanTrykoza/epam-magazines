@@ -1,7 +1,7 @@
 package com.my.command.commandContainer.impl.magazine;
 
 import com.my.command.commandContainer.Command;
-import com.my.jdbc.DBException;
+import com.my.jdbc.exception.DBException;
 import com.my.jdbc.MagazineManager;
 import com.my.jdbc.entity.Category;
 import com.my.jdbc.entity.Magazine;

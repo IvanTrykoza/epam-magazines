@@ -1,6 +1,6 @@
 package com.my.command.commandContainer;
 
-import com.my.jdbc.DBException;
+import com.my.jdbc.exception.DBException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 

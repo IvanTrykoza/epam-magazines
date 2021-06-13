@@ -1,7 +1,7 @@
 package com.my.command.commandContainer.impl.magazine;
 
 import com.my.command.commandContainer.Command;
-import com.my.jdbc.DBException;
+import com.my.jdbc.exception.DBException;
 import com.my.jdbc.MagazineManager;
 import com.my.jdbc.entity.Magazine;
 import org.apache.logging.log4j.LogManager;
@@ -30,14 +30,12 @@ public class FindMagazinesByNameCommand implements Command {
         if (req.getParameter("magazineName") != null) {
             magazineName = req.getParameter("magazineName");
             req.getSession().setAttribute("magazineName", magazineName);
-            logger.info(magazineName);
+            logger.info("magazine name ==> " + magazineName);
         }
-
 
         List<Magazine> magazines = magazineManager.findMagazineByName((String) req.getSession().getAttribute("magazineName"),
                 currentPage, recordsPerPage);
 
-        logger.info(magazines);
 
         if (magazines.isEmpty()) {
             throw new DBException("Please, Enter correct data.");

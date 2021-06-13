@@ -11,18 +11,15 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
-import javax.xml.transform.Result;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 
-import static com.my.jdbc.SQLConstant.*;
+import static com.my.jdbc.constatants.SQLConstant.*;
 
 public class DBManager {
     public static final Logger logger = LogManager.getLogger(DBManager.class.getName());
-
-    private final DataSource ds;
 
     //////////////////////////////////////////////////////////////////////
 
@@ -36,21 +33,9 @@ public class DBManager {
     }
 
     private DBManager() {
-        try {
-            Context initContext = new InitialContext();
-            Context envContext = (Context) initContext.lookup("java:/comp/env");
-            ds = (DataSource) envContext.lookup("jdbc/TestDB");
-        } catch (NamingException ex) {
-            logger.error("Cannot init DBManager", ex);
-            throw new IllegalStateException("Cannot init DBManager");
-        }
     }
 
     //////////////////////////////////////////////////////////////////////
-
-    public Connection getConnection() throws SQLException {
-        return ds.getConnection();
-    }
 
 //    --------------------------USER METHOD ------------------------------------
 
@@ -216,7 +201,6 @@ public class DBManager {
         try {
             psmt = con.prepareStatement(GET_USER_STATUS);
             psmt.setLong(1, userId);
-            logger.info("userId ==> " + userId);
             rs = psmt.executeQuery();
             if (rs.next()) {
                 status = rs.getBoolean("status");
@@ -259,7 +243,6 @@ public class DBManager {
             pstmt.setLong(k++, magazineId);
             pstmt.setDate(k++, startDate);
             pstmt.setDate(k++, endDate);
-            logger.info("ps = " + pstmt);
             pstmt.executeUpdate();
 
         } catch (SQLException ex) {

@@ -5,7 +5,7 @@ body {
 }
 
 
-.pagination{
+.pagination {
     margin: 2rem;
 }
 
@@ -16,7 +16,7 @@ body {
 
 .header-brand-name {
     margin: 0;
-    font-size: 2.5rem;
+    font-size: 2rem;
     font-family: "Playfair Display", serif;
 }
 
@@ -72,25 +72,12 @@ body {
     border-bottom: 1px solid #ddd;
 }
 
-.btn-addTo-cart{
+.btn-addTo-cart {
     margin: 15px;
     width: 8.5rem;
 }
 
 /* ---------------- main page section ---------------------------- */
-.btn-menu-castom {
-    border: none;
-    background-color: #ffff;
-    color: rgb(13, 110, 253);
-    border-bottom: 1px solid rgb(13, 110, 253);
-    border-radius: 0;
-}
-
-.custom-menu {
-    border: 1px solid rgb(13, 110, 253);
-    padding: 15px;
-}
-
 .btn-basket::before {
     content: "\f291";
     font-family: FontAwesome;

@@ -1,7 +1,7 @@
 package com.my.listener;
 
-import com.my.jdbc.DBException;
-import com.my.jdbc.DBManager;
+import com.my.jdbc.DBUtils;
+import com.my.jdbc.exception.DBException;
 import com.my.jdbc.UserManager;
 import com.my.jdbc.entity.Subscription;
 import org.apache.logging.log4j.LogManager;
@@ -20,11 +20,10 @@ public class ContextListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        DBManager dbManager = DBManager.getInstance();
+        DBUtils.init();
 
         Terminator terminator = new Terminator();
         terminator.start();
-
     }
 
     private class Terminator extends Thread {

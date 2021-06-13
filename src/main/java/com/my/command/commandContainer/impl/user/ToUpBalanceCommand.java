@@ -1,7 +1,7 @@
 package com.my.command.commandContainer.impl.user;
 
 import com.my.command.commandContainer.Command;
-import com.my.jdbc.DBException;
+import com.my.jdbc.exception.DBException;
 import com.my.jdbc.UserManager;
 import com.my.jdbc.entity.User;
 import org.apache.logging.log4j.LogManager;
@@ -22,7 +22,7 @@ public class ToUpBalanceCommand implements Command {
         double amount;
         try {
             amount = Double.parseDouble(req.getParameter("amount"));
-            logger.info("amount ==> " + amount);
+            logger.info("amount money ==> " + amount);
         } catch (NumberFormatException ex) {
             throw new DBException("Please, Enter correct value for balance", ex);
         }

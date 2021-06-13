@@ -1,7 +1,7 @@
 package com.my.command.commandContainer.impl;
 
 import com.my.command.commandContainer.Command;
-import com.my.jdbc.DBException;
+import com.my.jdbc.exception.DBException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -18,6 +18,8 @@ public class ChangeLocaleCommand implements Command {
         String locale = req.getParameter("locale");
 
         req.getSession().setAttribute("locale", locale);
+
+        logger.info("locale => " + locale);
 
         return "mainPage.jsp";
     }

@@ -1,6 +1,6 @@
 package com.my.filter;
 
-import com.my.jdbc.SQLConstant;
+import com.my.jdbc.constatants.SQLConstant;
 import com.my.jdbc.entity.User;
 
 import javax.servlet.*;

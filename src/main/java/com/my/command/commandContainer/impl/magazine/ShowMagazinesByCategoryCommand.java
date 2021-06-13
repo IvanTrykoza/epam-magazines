@@ -1,7 +1,7 @@
 package com.my.command.commandContainer.impl.magazine;
 
 import com.my.command.commandContainer.Command;
-import com.my.jdbc.DBException;
+import com.my.jdbc.exception.DBException;
 import com.my.jdbc.MagazineManager;
 import com.my.jdbc.entity.Magazine;
 import org.apache.logging.log4j.LogManager;
@@ -30,6 +30,7 @@ public class ShowMagazinesByCategoryCommand implements Command {
         if (req.getParameter("categoryName") != null) {
             categoryName = req.getParameter("categoryName");
             req.getSession().setAttribute("categoryName", categoryName);
+            logger.info("category name ==> " + categoryName);
         }
 
         List<Magazine> magazines = magazineManager.findMagazinesByCategory((String) req.getSession().getAttribute("categoryName"),

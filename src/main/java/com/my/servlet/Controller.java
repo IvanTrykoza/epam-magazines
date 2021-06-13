@@ -2,7 +2,7 @@ package com.my.servlet;
 
 import com.my.command.commandContainer.Command;
 import com.my.command.commandContainer.CommandContainer;
-import com.my.jdbc.DBException;
+import com.my.jdbc.exception.DBException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

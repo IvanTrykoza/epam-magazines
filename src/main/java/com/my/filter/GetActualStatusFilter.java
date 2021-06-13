@@ -1,8 +1,7 @@
 package com.my.filter;
 
-import com.my.jdbc.DBException;
-import com.my.jdbc.DBManager;
-import com.my.jdbc.SQLConstant;
+import com.my.jdbc.exception.DBException;
+import com.my.jdbc.constatants.SQLConstant;
 import com.my.jdbc.UserManager;
 import com.my.jdbc.entity.User;
 import org.apache.logging.log4j.LogManager;

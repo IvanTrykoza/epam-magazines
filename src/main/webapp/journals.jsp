@@ -184,12 +184,12 @@
                     <input type="hidden" name="command" value="login">
                     <div class="mb-3">
                         <label for="inputLogin" class="form-label"><fmt:message key="mainPage.loginField"/></label>
-                        <input type="text" name="login" class="form-control" id="inputLogin">
+                        <input type="text" name="login" class="form-control" id="inputLogin"required>
                     </div>
                     <div class="mb-3">
                         <label for="inputPassword" class="form-label"><fmt:message
                                 key="mainPage.passwordField"/></label>
-                        <input type="password" name="password" class="form-control" id="inputPassword">
+                        <input type="password" name="password" class="form-control" id="inputPassword" required>
                     </div>
                     <div class="mb-3">
                         <input type="submit" class="btn btn-success" value="<fmt:message key="mainPage.submit"/>">
@@ -216,16 +216,16 @@
                     <input type="hidden" name="command" value="register">
                     <div class="mb-3">
                         <label for="InputName" class="form-label"><fmt:message key="mainPage.nameSurname"/></label>
-                        <input type="text" name="name" class="form-control" id="InputName">
+                        <input type="text" name="name" class="form-control" id="InputName" required>
                     </div>
                     <div class="mb-3">
                         <label for="inputLoginReg" class="form-label"><fmt:message key="mainPage.loginField"/></label>
-                        <input type="text" name="login" class="form-control" id="inputLoginReg">
+                        <input type="text" name="login" class="form-control" id="inputLoginReg" required>
                     </div>
                     <div class="mb-3">
                         <label for="inputPasswordReg" class="form-label"><fmt:message
                                 key="mainPage.passwordField"/></label>
-                        <input type="password" name="password" class="form-control" id="inputPasswordReg">
+                        <input type="password" name="password" class="form-control" id="inputPasswordReg" required>
                     </div>
                     <div class="mb-3">
                         <input type="submit" class="btn btn-success" value="<fmt:message key="mainPage.submit"/>">
