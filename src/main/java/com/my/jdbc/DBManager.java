@@ -4,6 +4,7 @@ import com.my.jdbc.entity.Category;
 import com.my.jdbc.entity.Magazine;
 import com.my.jdbc.entity.Subscription;
 import com.my.jdbc.entity.User;
+import com.my.jdbc.exception.DBException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -56,6 +57,7 @@ public class DBManager {
             }
         } catch (SQLException ex) {
             logger.error("Cannot get users from data-base", ex);
+            throw new SQLException("Cannot get users from data-base", ex);
         } finally {
             close(rs);
             close(psmt);
@@ -76,6 +78,7 @@ public class DBManager {
             }
         } catch (SQLException ex) {
             logger.error("Cannot get user by login ==> " + userLogin, ex);
+            throw new SQLException("Cannot get user by login: " + userLogin, ex);
         } finally {
             close(rs);
             close(psmt);
@@ -96,6 +99,7 @@ public class DBManager {
             }
         } catch (SQLException ex) {
             logger.error("Cannot get user by ID ==> " + userId, ex);
+            throw new SQLException("Cannot get user by ID: " + userId, ex);
         } finally {
             close(rs);
             close(psmt);
@@ -116,6 +120,7 @@ public class DBManager {
         } catch (SQLException ex) {
             logger.error("Cannot create user with params (login, password, userName, userRole) ==> " +
                     "(" + login + "," + password + "," + userName + "," + userRole + ")", ex);
+            throw new SQLException("Cannot create user", ex);
         } finally {
             close(pstmt);
         }
@@ -134,6 +139,7 @@ public class DBManager {
         } catch (SQLException ex) {
             logger.error("Cannot top up balance with params (amountOfMoney, userId) ==> " +
                     "(" + amountOfMoney + "," + userId + ")", ex);
+            throw new SQLException("Cannot top up balance", ex);
         } finally {
             close(rs);
             close(psmt);
@@ -153,6 +159,7 @@ public class DBManager {
             }
         } catch (SQLException ex) {
             logger.error("Cannot get actual balance for userID ==> " + userId, ex);
+            throw new SQLException("Cannot get actual balance for userID: " + userId, ex);
         } finally {
             close(rs);
             close(psmt);
@@ -160,7 +167,7 @@ public class DBManager {
         return amountOfMoney;
     }
 
-    public void updateBalance(Connection con, double amountOfMoney, long userId) {
+    public void updateBalance(Connection con, double amountOfMoney, long userId) throws SQLException {
         PreparedStatement psmt = null;
         ResultSet rs = null;
         try {
@@ -172,6 +179,7 @@ public class DBManager {
         } catch (SQLException ex) {
             logger.error("Cannot update balance with params (amountOfMoney, userId) ==> " +
                     "(" + amountOfMoney + "," + userId + ")", ex);
+            throw new SQLException("Cannot update balance", ex);
         } finally {
             close(rs);
             close(psmt);
@@ -179,19 +187,22 @@ public class DBManager {
     }
 
 
-    public void setUserStatus(Connection con, int status, long userId) throws SQLException {
+    public int setUserStatus(Connection con, int status, long userId) throws SQLException {
         PreparedStatement psmt = null;
+        int returnRow;
         try {
             psmt = con.prepareStatement(SET_USER_STATUS);
             int k = 1;
             psmt.setString(k++, String.valueOf(status));
             psmt.setString(k++, String.valueOf(userId));
-            psmt.executeUpdate();
+            returnRow = psmt.executeUpdate();
         } catch (SQLException ex) {
             logger.error("Cannot set status for userID ==> " + userId, ex);
+            throw new SQLException("Cannot set status for userID: " + userId, ex);
         } finally {
             close(psmt);
         }
+        return returnRow;
     }
 
     public boolean getUserStatus(Connection con, long userId) throws SQLException {
@@ -207,6 +218,7 @@ public class DBManager {
             }
         } catch (SQLException ex) {
             logger.error("Cannot get status for userID ==> " + userId, ex);
+            throw new SQLException("Cannot get status for userID: " + userId, ex);
         } finally {
             close(rs);
             close(psmt);
@@ -226,6 +238,7 @@ public class DBManager {
             }
         } catch (SQLException ex) {
             logger.error("Cannot get amount of all users", ex);
+            throw new SQLException("Cannot get amount of all users", ex);
         } finally {
             close(rs);
             close(stmt);
@@ -248,6 +261,7 @@ public class DBManager {
         } catch (SQLException ex) {
             logger.error("Cannot create subscription with params (userId, magazineId, startDate, endDate) ==> " +
                     "(" + userId + "," + magazineId + "," + startDate + "," + endDate + ")", ex);
+            throw new SQLException("Cannot create subscription", ex);
         } finally {
             close(pstmt);
         }
@@ -266,6 +280,7 @@ public class DBManager {
             }
         } catch (SQLException ex) {
             logger.error("Cannot get subscriptions from data-base", ex);
+            throw new SQLException("Cannot get subscriptions from data-base", ex);
         } finally {
             close(rs);
             close(psmt);
@@ -285,6 +300,7 @@ public class DBManager {
             }
         } catch (SQLException ex) {
             logger.info("Cannot get subscriptions", ex);
+            throw new SQLException("Cannot get subscriptions", ex);
         } finally {
             close(rs);
             close(stmt);
@@ -292,7 +308,7 @@ public class DBManager {
         return subscriptions;
     }
 
-    public void removeSubscription(Connection con, long magazineId) {
+    public void removeSubscription(Connection con, long magazineId) throws SQLException {
         PreparedStatement psmt = null;
         try {
             psmt = con.prepareStatement(REMOVE_SUBSCRIPTION_MAGAZINE);
@@ -300,6 +316,7 @@ public class DBManager {
             psmt.executeUpdate();
         } catch (SQLException ex) {
             logger.error("Cannot remove subscription with magazineId ==> " + magazineId, ex);
+            throw new SQLException("Cannot remove subscription with magazineId ==> " + magazineId, ex);
         } finally {
             close(psmt);
         }
@@ -320,6 +337,7 @@ public class DBManager {
             }
         } catch (SQLException ex) {
             logger.error("Cannot check subscription", ex);
+            throw new SQLException("Cannot check subscription", ex);
         } finally {
             close(rs);
             close(psmt);
@@ -347,6 +365,7 @@ public class DBManager {
             }
         } catch (SQLException ex) {
             logger.error("Cannot get all magazines", ex);
+            throw new SQLException("Cannot get all magazines", ex);
         } finally {
             close(rs);
             close(psmt);
@@ -372,6 +391,7 @@ public class DBManager {
             }
         } catch (SQLException ex) {
             logger.error("Cannot find magazines by name ==> " + magazineName, ex);
+            throw new SQLException("Cannot find magazines by name: " + magazineName, ex);
         } finally {
             close(rs);
             close(psmt);
@@ -397,6 +417,7 @@ public class DBManager {
             }
         } catch (SQLException ex) {
             logger.error("Cannot find magazines by category ==> " + category, ex);
+            throw new SQLException("Cannot find magazines by category: " + category, ex);
         } finally {
             close(rs);
             close(psmt);
@@ -417,6 +438,7 @@ public class DBManager {
             }
         } catch (SQLException ex) {
             logger.error("Cannot get amount of all magazines", ex);
+            throw new SQLException("Cannot get amount of all magazines", ex);
         } finally {
             close(rs);
             close(stmt);
@@ -424,7 +446,7 @@ public class DBManager {
         return amount;
     }
 
-    public int getAmountOfMagazinesFoundByCategory(Connection con, String categoryName) {
+    public int getAmountOfMagazinesFoundByCategory(Connection con, String categoryName) throws SQLException {
         PreparedStatement psmt = null;
         ResultSet rs = null;
         int amount = 0;
@@ -437,6 +459,7 @@ public class DBManager {
             }
         } catch (SQLException ex) {
             logger.error("Cannot get amount of magazines found by category ==> " + categoryName, ex);
+            throw new SQLException("Cannot get amount of magazines found by category: " + categoryName, ex);
         } finally {
             close(rs);
             close(psmt);
@@ -444,7 +467,7 @@ public class DBManager {
         return amount;
     }
 
-    public int getAmountOfAllMagazinesFoundByName(Connection con, String magazineName) {
+    public int getAmountOfAllMagazinesFoundByName(Connection con, String magazineName) throws SQLException {
         PreparedStatement psmt = null;
         ResultSet rs = null;
         int amount = 0;
@@ -457,6 +480,7 @@ public class DBManager {
             }
         } catch (SQLException ex) {
             logger.error("Cannot get amount of all magazines found by name ==> " + magazineName, ex);
+            throw new SQLException("Cannot get amount of all magazines found by name: " + magazineName, ex);
         } finally {
             close(rs);
             close(psmt);
@@ -478,6 +502,7 @@ public class DBManager {
             }
         } catch (SQLException ex) {
             logger.error("Cannot get categories from data-base", ex);
+            throw new SQLException("Cannot get categories from data-base", ex);
         } finally {
             close(rs);
             close(psmt);
@@ -499,6 +524,7 @@ public class DBManager {
         } catch (SQLException ex) {
             logger.error("Cannot set magazine info with params (name, description, category, price, magazineID) ==> " +
                     "(" + magazineName + "," + magazineDescription + "," + magazineCategory + "," + magazinePrice + "," + magazineId + ")", ex);
+            throw new SQLException("Cannot set magazine info for magazineId: " + magazineId, ex);
         } finally {
             close(psmt);
         }
@@ -517,6 +543,7 @@ public class DBManager {
         } catch (SQLException ex) {
             logger.error("Cannot add magazine to data-base with params (name, description, category, price) ==> " +
                     "(" + magazineName + "," + magazineDescription + "," + magazineCategory + "," + magazinePrice + ")", ex);
+            throw new SQLException("Cannot add magazine to data-base", ex);
         } finally {
             close(statement);
         }
@@ -530,6 +557,7 @@ public class DBManager {
             psmt.executeUpdate();
         } catch (SQLException ex) {
             logger.error("Cannot delete magazine with id ==> " + magazineId, ex);
+            throw new SQLException("Cannot delete magazine with id: " + magazineId, ex);
         } finally {
             close(psmt);
         }
@@ -543,6 +571,7 @@ public class DBManager {
             psmt.executeUpdate();
         } catch (SQLException ex) {
             logger.error("Cannot add category with name ==> " + categoryName, ex);
+            throw new SQLException("Cannot add category with name: " + categoryName, ex);
         } finally {
             close(psmt);
         }
@@ -561,6 +590,7 @@ public class DBManager {
             }
         } catch (SQLException ex) {
             logger.error("Cannot get magazine by ID ==> " + magazineId, ex);
+            throw new SQLException("Cannot get magazine by ID: " + magazineId, ex);
         } finally {
             close(rs);
             close(psmt);
@@ -586,6 +616,7 @@ public class DBManager {
             }
         } catch (SQLException ex) {
             logger.error("Cannot sort magazines by name", ex);
+            throw new SQLException("Cannot sort magazines by name", ex);
         } finally {
             close(rs);
             close(psmt);
@@ -611,6 +642,7 @@ public class DBManager {
             }
         } catch (SQLException ex) {
             logger.error("Cannot sort magazines by name ==> " + magazineName, ex);
+            throw new SQLException("Cannot sort magazines by name: " + magazineName, ex);
         } finally {
             close(rs);
             close(psmt);
@@ -636,6 +668,7 @@ public class DBManager {
             }
         } catch (SQLException ex) {
             logger.error("Cannot sort magazines by name with category ==> " + categoryName, ex);
+            throw new SQLException("Cannot sort magazines by name with category: " + categoryName, ex);
         } finally {
             close(rs);
             close(psmt);
@@ -661,6 +694,7 @@ public class DBManager {
             }
         } catch (SQLException ex) {
             logger.error("Cannot sort magazines by price L ==> H", ex);
+            throw new SQLException("Cannot sort magazines by price L ==> H", ex);
         } finally {
             close(rs);
             close(psmt);
@@ -686,6 +720,7 @@ public class DBManager {
             }
         } catch (SQLException ex) {
             logger.error("Cannot sort magazines by price L ==> H with name ==>" + magazineName, ex);
+            throw new SQLException("Cannot sort magazines by price L ==> H with name: " + magazineName, ex);
         } finally {
             close(rs);
             close(psmt);
@@ -711,6 +746,7 @@ public class DBManager {
             }
         } catch (SQLException ex) {
             logger.error("Cannot sort magazines by price L ==> H with category ==> " + categoryName, ex);
+            throw new SQLException("Cannot sort magazines by price L ==> H with category: " + categoryName, ex);
         } finally {
             close(rs);
             close(psmt);
@@ -736,6 +772,7 @@ public class DBManager {
             }
         } catch (SQLException ex) {
             logger.error("Cannot sort magazines by price H ==> L", ex);
+            throw new SQLException("Cannot sort magazines by price H ==> L", ex);
         } finally {
             close(rs);
             close(psmt);
@@ -761,6 +798,7 @@ public class DBManager {
             }
         } catch (SQLException ex) {
             logger.error("Cannot sort magazines by price H ==> L with name ==>" + magazineName, ex);
+            throw new SQLException("Cannot sort magazines by price H ==> L with name: " + magazineName, ex);
         } finally {
             close(rs);
             close(psmt);
@@ -786,6 +824,7 @@ public class DBManager {
             }
         } catch (SQLException ex) {
             logger.error("Cannot sort magazines by price H ==> L with category ==> " + categoryName, ex);
+            throw new SQLException("Cannot sort magazines by price L ==> H with category: " + categoryName, ex);
         } finally {
             close(rs);
             close(psmt);

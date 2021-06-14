@@ -79,4 +79,7 @@ public class DBManagerTest {
         Assert.assertEquals("Coach #3, March 2021", magazine.getName());
         System.out.println(magazine);
     }
+
+
+
 }
