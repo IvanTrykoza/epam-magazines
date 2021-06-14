@@ -516,8 +516,9 @@ public class DBManager {
         return categories;
     }
 
-    public void setMagazineInfo(Connection con, String magazineName, String magazineDescription, int magazineCategory, double magazinePrice, long magazineId) throws SQLException {
+    public int setMagazineInfo(Connection con, String magazineName, String magazineDescription, int magazineCategory, double magazinePrice, long magazineId) throws SQLException {
         PreparedStatement psmt = null;
+        int resultRows;
         try {
             psmt = con.prepareStatement(SET_MAGAZINE_INFO);
             int k = 1;
@@ -526,7 +527,7 @@ public class DBManager {
             psmt.setInt(k++, magazineCategory);
             psmt.setDouble(k++, magazinePrice);
             psmt.setLong(k++, magazineId);
-            psmt.executeUpdate();
+            resultRows = psmt.executeUpdate();
         } catch (SQLException ex) {
             logger.error("Cannot set magazine info with params (name, description, category, price, magazineID) ==> " +
                     "(" + magazineName + "," + magazineDescription + "," + magazineCategory + "," + magazinePrice + "," + magazineId + ")", ex);
@@ -534,10 +535,12 @@ public class DBManager {
         } finally {
             close(psmt);
         }
+        return resultRows;
     }
 
-    public void addMagazine(Connection con, String magazineName, String magazineDescription, int magazineCategory, double magazinePrice) throws SQLException {
+    public int addMagazine(Connection con, String magazineName, String magazineDescription, int magazineCategory, double magazinePrice) throws SQLException {
         PreparedStatement statement = null;
+        int resultRows;
         try {
             statement = con.prepareStatement(ADD_NEW_MAGAZINE);
             int k = 1;
@@ -545,7 +548,7 @@ public class DBManager {
             statement.setString(k++, magazineDescription);
             statement.setInt(k++, magazineCategory);
             statement.setDouble(k++, magazinePrice);
-            statement.executeUpdate();
+            resultRows = statement.executeUpdate();
         } catch (SQLException ex) {
             logger.error("Cannot add magazine to data-base with params (name, description, category, price) ==> " +
                     "(" + magazineName + "," + magazineDescription + "," + magazineCategory + "," + magazinePrice + ")", ex);
@@ -553,6 +556,7 @@ public class DBManager {
         } finally {
             close(statement);
         }
+        return resultRows;
     }
 
     public void deleteMagazineById(Connection con, long magazineId) throws SQLException {
@@ -569,18 +573,20 @@ public class DBManager {
         }
     }
 
-    public void setCategory(Connection con, String categoryName) throws SQLException {
+    public int setCategory(Connection con, String categoryName) throws SQLException {
         PreparedStatement psmt = null;
+        int resultRows;
         try {
             psmt = con.prepareStatement(SET_CATEGORY);
             psmt.setString(1, categoryName);
-            psmt.executeUpdate();
+            resultRows = psmt.executeUpdate();
         } catch (SQLException ex) {
             logger.error("Cannot add category with name ==> " + categoryName, ex);
             throw new SQLException("Cannot add category with name: " + categoryName, ex);
         } finally {
             close(psmt);
         }
+        return resultRows;
     }
 
     public Magazine getMagazineById(Connection con, long magazineId) throws SQLException {

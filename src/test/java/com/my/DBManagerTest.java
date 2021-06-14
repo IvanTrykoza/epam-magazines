@@ -1,6 +1,9 @@
-package com.my.jdbc;
+package com.my;
 
+import com.my.jdbc.DBManager;
+import com.my.jdbc.DBUtils;
 import com.my.jdbc.constatants.SQLConstant;
+import com.my.jdbc.entity.Category;
 import com.my.jdbc.entity.Magazine;
 import com.my.jdbc.entity.Subscription;
 import com.my.jdbc.entity.User;
@@ -226,6 +229,56 @@ public class DBManagerTest {
         System.out.println(magazines);
     }
 
+    @Test
+    public void testGetCategories() throws SQLException {
+        Mockito.when(stmt.executeQuery(SQLConstant.GET_CATEGORY))
+                .thenReturn(rs);
+        Mockito.when(con.createStatement()).thenReturn(stmt);
 
+
+        Mockito.when(rs.next()).thenReturn(true).thenReturn(true).thenReturn(true).thenReturn(false);
+        Mockito.when(rs.getInt("category_id")).thenReturn(1).thenReturn(2).thenReturn(3);
+
+        DBManager dbManager = DBManager.getInstance();
+        List<Category> categories = dbManager.getCategories(con);
+        Assert.assertEquals(3, categories.size());
+        System.out.println(categories);
+    }
+
+    @Test
+    public void testSetMagazineInfo() throws SQLException{
+        Mockito.when(pstmt.executeQuery()).thenReturn(rs);
+        Mockito.when(con.prepareStatement(SQLConstant.SET_MAGAZINE_INFO)).thenReturn(pstmt);
+
+        Mockito.when(pstmt.executeUpdate()).thenReturn(1);
+        DBManager dbManager = DBManager.getInstance();
+
+        int resultRows = dbManager.setMagazineInfo(con, "name", "description", 1,20, 1);
+        Assert.assertEquals(1, resultRows);
+    }
+
+    @Test
+    public void testAddMagazine() throws SQLException{
+        Mockito.when(pstmt.executeQuery()).thenReturn(rs);
+        Mockito.when(con.prepareStatement(SQLConstant.ADD_NEW_MAGAZINE)).thenReturn(pstmt);
+
+        Mockito.when(pstmt.executeUpdate()).thenReturn(1);
+        DBManager dbManager = DBManager.getInstance();
+
+        int resultRows = dbManager.addMagazine(con, "name", "description", 1,20);
+        Assert.assertEquals(1, resultRows);
+    }
+
+    @Test
+    public void setCategory() throws SQLException{
+        Mockito.when(pstmt.executeQuery()).thenReturn(rs);
+        Mockito.when(con.prepareStatement(SQLConstant.SET_CATEGORY)).thenReturn(pstmt);
+
+        Mockito.when(pstmt.executeUpdate()).thenReturn(1);
+        DBManager dbManager = DBManager.getInstance();
+
+        int resultRows = dbManager.setCategory(con, "asdf");
+        Assert.assertEquals(1, resultRows);
+    }
 
 }
