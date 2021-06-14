@@ -107,8 +107,9 @@ public class DBManager {
         return user;
     }
 
-    public void createUser(Connection con, String login, String password, String userName, int userRole) throws SQLException {
+    public int createUser(Connection con, String login, String password, String userName, int userRole) throws SQLException {
         PreparedStatement pstmt = null;
+        int resultRows;
         try {
             pstmt = con.prepareStatement(ADD_NEW_USER);
             int k = 1;
@@ -116,7 +117,7 @@ public class DBManager {
             pstmt.setString(k++, password);
             pstmt.setString(k++, userName);
             pstmt.setInt(k++, userRole);
-            pstmt.executeUpdate();
+            resultRows = pstmt.executeUpdate();
         } catch (SQLException ex) {
             logger.error("Cannot create user with params (login, password, userName, userRole) ==> " +
                     "(" + login + "," + password + "," + userName + "," + userRole + ")", ex);
@@ -124,18 +125,20 @@ public class DBManager {
         } finally {
             close(pstmt);
         }
+        return resultRows;
     }
 
 
-    public void topUpBalance(Connection con, double amountOfMoney, long userId) throws SQLException {
+    public int topUpBalance(Connection con, double amountOfMoney, long userId) throws SQLException {
         PreparedStatement psmt = null;
         ResultSet rs = null;
+        int resultRows;
         try {
             psmt = con.prepareStatement(SET_USER_BALANCE);
             int k = 1;
             psmt.setString(k++, String.valueOf(amountOfMoney + getActualBalance(con, userId)));
             psmt.setString(k++, String.valueOf(userId));
-            psmt.executeUpdate();
+            resultRows = psmt.executeUpdate();
         } catch (SQLException ex) {
             logger.error("Cannot top up balance with params (amountOfMoney, userId) ==> " +
                     "(" + amountOfMoney + "," + userId + ")", ex);
@@ -144,6 +147,7 @@ public class DBManager {
             close(rs);
             close(psmt);
         }
+        return resultRows;
     }
 
     public double getActualBalance(Connection con, long userId) throws SQLException {
@@ -189,20 +193,20 @@ public class DBManager {
 
     public int setUserStatus(Connection con, int status, long userId) throws SQLException {
         PreparedStatement psmt = null;
-        int returnRow;
+        int resultRows;
         try {
             psmt = con.prepareStatement(SET_USER_STATUS);
             int k = 1;
             psmt.setString(k++, String.valueOf(status));
             psmt.setString(k++, String.valueOf(userId));
-            returnRow = psmt.executeUpdate();
+            resultRows = psmt.executeUpdate();
         } catch (SQLException ex) {
             logger.error("Cannot set status for userID ==> " + userId, ex);
             throw new SQLException("Cannot set status for userID: " + userId, ex);
         } finally {
             close(psmt);
         }
-        return returnRow;
+        return resultRows;
     }
 
     public boolean getUserStatus(Connection con, long userId) throws SQLException {
@@ -247,8 +251,9 @@ public class DBManager {
     }
 
 
-    public void doSubscribe(Connection con, long userId, long magazineId, Date startDate, Date endDate) throws SQLException {
+    public int doSubscribe(Connection con, long userId, long magazineId, Date startDate, Date endDate) throws SQLException {
         PreparedStatement pstmt = null;
+        int resultRows;
         try {
             pstmt = con.prepareStatement(DO_SUBSCRIPTION);
             int k = 1;
@@ -256,7 +261,7 @@ public class DBManager {
             pstmt.setLong(k++, magazineId);
             pstmt.setDate(k++, startDate);
             pstmt.setDate(k++, endDate);
-            pstmt.executeUpdate();
+            resultRows = pstmt.executeUpdate();
 
         } catch (SQLException ex) {
             logger.error("Cannot create subscription with params (userId, magazineId, startDate, endDate) ==> " +
@@ -265,6 +270,7 @@ public class DBManager {
         } finally {
             close(pstmt);
         }
+        return resultRows;
     }
 
     public List<Subscription> getSubscriptionsByUserId(Connection con, long userId) throws SQLException {
